@@ -1,0 +1,13 @@
+[
+  {
+    "id": "after-dark-01",
+    "name": "After Dark",
+    "description": "A curated pack of 10 exclusive beats for serious artists creating a full project. Dark, hard trap sounds perfect for making a cohesive, impactful statement.",
+    "bpm_range": "130-160",
+    "price": 1970,
+    "artwork": "/beat_tapes/after_dark/cover.webp",
+    "genre": ["Trap", "Hip-Hop"],
+    "mood": ["Dark", "Energetic", "Hard", "Intense"],
+    "tags": ["Beat Pack", "Album Ready", "Exclusive"]
+  }
+]
