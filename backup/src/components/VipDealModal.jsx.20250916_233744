@@ -1,0 +1,59 @@
+import { useEffect, useState } from 'react';
+import './VipDealModal.css';
+
+export default function VipDealModal() {
+  const [open, setOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setOpen(true), 3000);
+    return () => clearTimeout(t);
+  }, []);
+
+  const close = () => setOpen(false);
+
+  const copyCode = async () => {
+    try {
+      await navigator.clipboard.writeText('VIP50');
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1200);
+    } catch {
+      // no-op
+    }
+  };
+
+  const handleRedeem = () => {
+    // Close before navigating to section anchor
+    setOpen(false);
+  };
+
+  if (!open) return null;
+
+  return (
+    <div className="vip-backdrop" onClick={close}>
+      <div
+        className="vip-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="vip-title"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button type="button" className="vip-close" onClick={close} aria-label="Close">
+          &times;
+        </button>
+        <div className="vip-body">
+          <h2 id="vip-title" className="vip-headline">Hive VIP Deal: 50% OFF Rose Gold & Diamond</h2>
+          <div className="vip-code-row" aria-live="polite">
+            <div className="vip-code" title="Discount code">VIP50</div>
+            <button type="button" className="vip-copy" onClick={copyCode}>
+              {copied ? 'Copied!' : 'Copy'}
+            </button>
+          </div>
+          <a href="#player" className="vip-redeem" onClick={handleRedeem}>Redeem Now</a>
+          <div className="vip-expire">Valid for the next 48 hours only</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+

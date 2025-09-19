@@ -1,0 +1,120 @@
+          <div className="underline" />
+          <div
+            className="merch-grid"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+              gap: '16px',
+              marginTop: '16px',
+            }}
+          >
+            <article
+              style={{
+                background: '#141416',
+                border: '1px solid var(--line)',
+                borderRadius: '12px',
+                padding: '16px',
+              }}
+            >
+              <div style={{ position: 'relative', marginBottom: '12px' }}>
+                <img
+                  src="/merch/tees/i%27m_not_a_rapper/white_front_back.png"
+                  alt="I'M NOT A RAPPER. | Honeycomb Lab White Premium Tee"
+                  style={{ width: '100%', display: 'block', borderRadius: '8px', background: '#0f1012' }}
+                  loading="lazy"
+                  onMouseEnter={(e) => { e.currentTarget.src = '/merch/tees/i%27m_not_a_rapper/white_front.png' }}
+                  onMouseLeave={(e) => { e.currentTarget.src = '/merch/tees/i%27m_not_a_rapper/white_front_back.png' }}
+                />
+              </div>
+              <h3 style={{ margin: '0 0 6px', fontSize: '18px' }}>I'M NOT A RAPPER. | Honeycomb Lab White Premium Tee</h3>
+              <p className="subtle" style={{ margin: 0, color: 'var(--muted)' }}>$38–$50 (Free Worldwide Shipping)</p>
+              <p className="subtle" style={{ margin: '4px 0 0', color: 'var(--muted)' }}>Sizes: XS–5XL</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginTop: 8 }}>
+                <label htmlFor="size-white" className="subtle" style={{ color: 'var(--muted)' }}>Size:</label>
+                <select id="size-white" defaultValue="M" style={{ background:'#0f1012', color:'var(--text)', border:'1px solid var(--line)', borderRadius:'8px', padding:'6px 8px' }}>
+                  <option>XS</option>
+                  <option>S</option>
+                  <option>M</option>
+                  <option>L</option>
+                  <option>XL</option>
+                  <option>2XL</option>
+                  <option>3XL</option>
+                  <option>4XL</option>
+                  <option>5XL</option>
+                </select>
+                <button
+                  type="button"
+                  className="cta secondary"
+                  onClick={() => {
+                    const product = "I'M NOT A RAPPER. | Honeycomb Lab White Premium Tee";
+                    const size = document.getElementById('size-white')?.value || 'M';
+                    const subject = encodeURIComponent(`Merch Order - ${product} (${size})`);
+                    const body = encodeURIComponent(`Hi Honeycomb Lab,\n\nI'd like to order:\n${product}\nSize: ${size}\n`);
+                    const url = `mailto:contact@honeycomblab.art?subject=${subject}&body=${body}`;
+                    window.location.href = url;
+                  }}
+                >Buy</button>
+              </div>
+            </article>
+
+            <article
+              style={{
+                background: '#141416',
+                border: '1px solid var(--line)',
+                borderRadius: '12px',
+                padding: '16px',
+              }}
+            >
+              <div style={{ position: 'relative', marginBottom: '12px' }}>
+                <img
+                  src="/merch/tees/i%27m_not_a_rapper/black_front_back.png"
+                  alt="I'M NOT A RAPPER. | Honeycomb Lab Black Premium Tee"
+                  style={{ width: '100%', display: 'block', borderRadius: '8px', background: '#0f1012' }}
+                  loading="lazy"
+                  onMouseEnter={(e) => { e.currentTarget.src = '/merch/tees/i%27m_not_a_rapper/black_front.png' }}
+                  onMouseLeave={(e) => { e.currentTarget.src = '/merch/tees/i%27m_not_a_rapper/black_front_back.png' }}
+                />
+              </div>
+              <h3 style={{ margin: '0 0 6px', fontSize: '18px' }}>I'M NOT A RAPPER. | Honeycomb Lab Black Premium Tee</h3>
+              <p className="subtle" style={{ margin: 0, color: 'var(--muted)' }}>$38–$50 (Free Worldwide Shipping)</p>
+              <p className="subtle" style={{ margin: '4px 0 0', color: 'var(--muted)' }}>Sizes: XS–5XL</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginTop: 8 }}>
+                <label htmlFor="size-black" className="subtle" style={{ color: 'var(--muted)' }}>Size:</label>
+                <select id="size-black" defaultValue="M" style={{ background:'#0f1012', color:'var(--text)', border:'1px solid var(--line)', borderRadius:'8px', padding:'6px 8px' }}>
+                  <option>XS</option>
+                  <option>S</option>
+                  <option>M</option>
+                  <option>L</option>
+                  <option>XL</option>
+                  <option>2XL</option>
+                  <option>3XL</option>
+                  <option>4XL</option>
+                  <option>5XL</option>
+                </select>
+                <button
+                  type="button"
+                  className="cta secondary"
+                  onClick={() => {
+                    const product = "I'M NOT A RAPPER. | Honeycomb Lab Black Premium Tee";
+                    const size = document.getElementById('size-black')?.value || 'M';
+                    const subject = encodeURIComponent(`Merch Order - ${product} (${size})`);
+                    const body = encodeURIComponent(`Hi Honeycomb Lab,\n\nI'd like to order:\n${product}\nSize: ${size}\n`);
+                    const url = `mailto:contact@honeycomblab.art?subject=${subject}&body=${body}`;
+                    window.location.href = url;
+                  }}
+                >Buy</button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      {/* CUSTOM BEAT */}
+      <section id="custom" className="section custom hex">
+        <div className="container">
+          <div className="kicker">Custom Beat</div>
+          <h2 className="headline">WANT A CUSTOM BEAT?</h2>
+          <div className="underline" />
+          <p className="lead">A one-of-a-kind beat, made exclusively for you.</p>
+          <div className="sale-bar" role="status" aria-live="polite" style={{ position: 'relative', top: 'auto', marginTop: 8 }}>
+            <svg className="sale-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">

@@ -1,0 +1,11 @@
+
+        :root{
+          --bg:#2e2e2e; /* charcoal */
+          --panel:#1a1a1a; /* dark card */
+          --muted:#a6a6a6; /* ash */
+          --text:#f4f4f4; /* chalk */
+          --line:#3a3a3a; /* divider */
+          --accent:#e4a010; /* honey orange */
+        }
+        
+        /* Snapshot before increasing nav strip vertical size (mobile) */
