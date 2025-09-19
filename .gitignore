@@ -1,0 +1,6 @@
+﻿# Node and build artifacts
+node_modules/
+dist/
+backup/
+.DS_Store
+Thumbs.db
