@@ -4,3 +4,6 @@ dist/
 backup/
 .DS_Store
 Thumbs.db
+.vscode/
+root/dist/
+
