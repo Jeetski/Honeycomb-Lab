@@ -7,3 +7,9 @@ Thumbs.db
 .vscode/
 root/dist/
 
+root/backup/
+tmp/
+root/tmp/
+tmp_*
+*.tmp
+
