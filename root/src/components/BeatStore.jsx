@@ -268,9 +268,9 @@ export default function BeatStore() {
   const handleBuy = (tier) => {
     if (!currentBeat) return;
     const links = currentBeat.priceLinks || {};
-    const url = tier === 'standard' ? links.standard
-              : tier === 'premium' ? links.premium
-              : tier === 'exclusive' ? links.exclusive
+    const url = tier === 'silver' ? links.silver
+              : tier === 'roseGold' ? links.roseGold
+              : tier === 'diamond' ? links.diamond
               : '';
     if (url) {
       window.open(url, '_blank', 'noopener,noreferrer');
@@ -805,7 +805,7 @@ export default function BeatStore() {
                 ) : (
                   <div style={{width:'100%', height:'100%', background:'linear-gradient(135deg, #272727, #1c1c1c)'}} />
                 )}
-                {currentBeat && currentBeat.id !== 'ambivalence-1' && (
+                {currentBeat && !['ambivalence-1','gold-1','digital-strings-1'].includes(currentBeat.id) && (
                   <div className="thumb-overlay" aria-hidden="true">COMING SOON</div>
                 )}
               </div>
@@ -846,9 +846,9 @@ export default function BeatStore() {
                     <small className="subtle">Free for nonprofit use (tagged)</small>
                   </div>
                   <div style={{display:'flex', flexWrap:'wrap', gap:10, marginTop:8}}>
-                    <button type="button" className="btn-tier btn-silver" onClick={() => handleBuy('standard')}>Buy Silver Limited License</button>
-                    <button type="button" className="btn-tier btn-rose" onClick={() => handleBuy('premium')}>Buy Rose Gold Expanded License</button>
-                    <button type="button" className="btn-tier btn-diamond" onClick={() => handleBuy('exclusive')}>Buy Diamond Unlimited License</button>
+                    <button type="button" className="btn-tier btn-silver" onClick={() => handleBuy('silver')}>Buy Silver Limited License</button>
+                    <button type="button" className="btn-tier btn-rose" onClick={() => handleBuy('roseGold')}>Buy Rose Gold Expanded License</button>
+                    <button type="button" className="btn-tier btn-diamond" onClick={() => handleBuy('diamond')}>Buy Diamond Unlimited License</button>
                     <button type="button" className="btn-ghost" onClick={() => setShowCompare(true)}>Compare Licenses</button>
                   </div>
                   </>
@@ -885,6 +885,146 @@ export default function BeatStore() {
       {/* PLEDGE (hidden) */}
 
       {/* <BeatTapesGallery /> */}
+
+      {/* MERCH */}
+      <section id="merch" className="section hex">
+        <div className="container">
+          <div className="kicker">Merch</div>
+          <h2 className="headline">Fresh Honeycomb Merch</h2>
+          <div className="underline" />
+          <div
+            className="merch-grid"
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+              gap: '16px',
+              marginTop: '16px',
+            }}
+          >
+            <article
+              style={{
+                background: '#141416',
+                border: '1px solid var(--line)',
+                borderRadius: '12px',
+                padding: '16px',
+              }}
+            >
+              <div style={{ position: 'relative', marginBottom: '12px' }}>
+                <img
+                  src="/merch/tees/i%27m_not_a_rapper/white_front_back.png"
+                  alt="I'M NOT A RAPPER. | Honeycomb Lab White Premium Tee"
+                  style={{ width: '100%', display: 'block', borderRadius: '8px', background: '#0f1012' }}
+                  loading="lazy"
+                  onMouseEnter={(e) => { e.currentTarget.src = '/merch/tees/i%27m_not_a_rapper/white_front.png' }}
+                  onMouseLeave={(e) => { e.currentTarget.src = '/merch/tees/i%27m_not_a_rapper/white_front_back.png' }}
+                />
+                <span
+                  aria-label="Out of stock"
+                  style={{
+                    position: 'absolute',
+                    top: 8,
+                    left: 8,
+                    background: 'linear-gradient(135deg, #8a2a2a, #c0392b)',
+                    color: '#fff',
+                    fontWeight: 900,
+                    fontSize: 12,
+                    padding: '6px 10px',
+                    borderRadius: 8,
+                    border: '1px solid rgba(0,0,0,0.4)',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.25)'
+                  }}
+                >OUT OF STOCK</span>
+              </div>
+              <h3 style={{ margin: '0 0 6px', fontSize: '18px' }}>I'M NOT A RAPPER. | Honeycomb Lab White Premium Tee</h3>
+              <p className="subtle" style={{ margin: 0, color: 'var(--muted)' }}>$38-$50 (Free Worldwide Shipping)</p>
+              <p className="subtle" style={{ margin: '4px 0 0', color: 'var(--muted)' }}>Sizes: XS-5XL</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginTop: 8 }}>
+                <label htmlFor="size-white" className="subtle" style={{ color: 'var(--muted)' }}>Size:</label>
+                <select id="size-white" defaultValue="M" disabled aria-disabled="true" style={{ background:'#0f1012', color:'var(--text)', opacity: .6, cursor:'not-allowed', border:'1px solid var(--line)', borderRadius:'8px', padding:'6px 8px' }}>
+                  <option>XS</option>
+                  <option>S</option>
+                  <option>M</option>
+                  <option>L</option>
+                  <option>XL</option>
+                  <option>2XL</option>
+                  <option>3XL</option>
+                  <option>4XL</option>
+                  <option>5XL</option>
+                </select>
+                <button
+                  type="button"
+                  className="cta secondary"
+                  disabled
+                  aria-disabled="true"
+                  title="Out of stock"
+                  style={{ cursor:'not-allowed', opacity:.7 }}
+                >Out of Stock</button>
+              </div>
+            </article>
+
+            <article
+              style={{
+                background: '#141416',
+                border: '1px solid var(--line)',
+                borderRadius: '12px',
+                padding: '16px',
+              }}
+            >
+              <div style={{ position: 'relative', marginBottom: '12px' }}>
+                <img
+                  src="/merch/tees/i%27m_not_a_rapper/black_front_back.png"
+                  alt="I'M NOT A RAPPER. | Honeycomb Lab Black Premium Tee"
+                  style={{ width: '100%', display: 'block', borderRadius: '8px', background: '#0f1012' }}
+                  loading="lazy"
+                  onMouseEnter={(e) => { e.currentTarget.src = '/merch/tees/i%27m_not_a_rapper/black_front.png' }}
+                  onMouseLeave={(e) => { e.currentTarget.src = '/merch/tees/i%27m_not_a_rapper/black_front_back.png' }}
+                />
+                <span
+                  aria-label="Out of stock"
+                  style={{
+                    position: 'absolute',
+                    top: 8,
+                    left: 8,
+                    background: 'linear-gradient(135deg, #8a2a2a, #c0392b)',
+                    color: '#fff',
+                    fontWeight: 900,
+                    fontSize: 12,
+                    padding: '6px 10px',
+                    borderRadius: 8,
+                    border: '1px solid rgba(0,0,0,0.4)',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.25)'
+                  }}
+                >OUT OF STOCK</span>
+              </div>
+              <h3 style={{ margin: '0 0 6px', fontSize: '18px' }}>I'M NOT A RAPPER. | Honeycomb Lab Black Premium Tee</h3>
+              <p className="subtle" style={{ margin: 0, color: 'var(--muted)' }}>$38-$50 (Free Worldwide Shipping)</p>
+              <p className="subtle" style={{ margin: '4px 0 0', color: 'var(--muted)' }}>Sizes: XS-5XL</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginTop: 8 }}>
+                <label htmlFor="size-black" className="subtle" style={{ color: 'var(--muted)' }}>Size:</label>
+                <select id="size-black" defaultValue="M" disabled aria-disabled="true" style={{ background:'#0f1012', color:'var(--text)', opacity:.6, cursor:'not-allowed', border:'1px solid var(--line)', borderRadius:'8px', padding:'6px 8px' }}>
+                  <option>XS</option>
+                  <option>S</option>
+                  <option>M</option>
+                  <option>L</option>
+                  <option>XL</option>
+                  <option>2XL</option>
+                  <option>3XL</option>
+                  <option>4XL</option>
+                  <option>5XL</option>
+                </select>
+                <button
+                  type="button"
+                  className="cta secondary"
+                  disabled
+                  aria-disabled="true"
+                  title="Out of stock"
+                  style={{ cursor:'not-allowed', opacity:.7 }}
+                >Out of Stock</button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
 
       {/* CUSTOM BEAT */}
       <section id="custom" className="section custom hex">
@@ -937,7 +1077,7 @@ export default function BeatStore() {
               </div>
               <div className="grid grid-2" style={{marginTop:12}}>
                 <input type="text" placeholder="Reference Track" />
-                <input type="text" placeholder="Referral code (optional)" />
+                <input type="text" placeholder="Promo code (optional)" />
               </div>
               <textarea style={{marginTop:12,minHeight:'120px'}} rows={6} placeholder="Additional information" />
               <button style={{marginTop:14}} type="submit">Submit Inquiry</button>

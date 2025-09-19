@@ -335,8 +335,8 @@ export default function HexGallery({ radius = 2, onSelect, audioRef }) {
           ctx.globalAlpha = 1
           ctx.fill()
         }
-        // Overlay "COMING SOON" for non-ambivalence beats (aligned to current transformed hex)
-        if (match && match.beat && match.beat.id !== 'ambivalence-1') {
+        // Overlay "COMING SOON" for beats not yet available (exclude playable ones)
+        if (match && match.beat && !['ambivalence-1','gold-1','digital-strings-1'].includes(match.beat.id)) {
           ctx.save()
           ctx.globalAlpha = 0.6
           ctx.fillStyle = '#000'
