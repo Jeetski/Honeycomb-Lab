@@ -173,10 +173,10 @@ export default function BeatStore() {
   };
   // Launch sale countdown timer
   const [nowTs, setNowTs] = useState(() => Date.now());
-  // Deadline: 27th of the current month at 00:00 (local time)
+  // Deadline: End of the current year (Dec 31, 23:59:59 local time)
   const launchDeadlineTs = (() => {
     const d = new Date(nowTs);
-    return new Date(d.getFullYear(), d.getMonth(), 27, 0, 0, 0, 0).getTime();
+    return new Date(d.getFullYear(), 11, 31, 23, 59, 59, 999).getTime();
   })();
   const msLeft = Math.max(0, launchDeadlineTs - nowTs);
   const dayMs = 24 * 60 * 60 * 1000;
