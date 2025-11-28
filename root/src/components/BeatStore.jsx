@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { memo, useState, useEffect, useRef } from 'react';
 import './BeatStore.css';
 
 function CompareLicensesModal({ onClose, endsInText }) {
@@ -95,6 +95,17 @@ function CompareLicensesModal({ onClose, endsInText }) {
 }
 import HexGallery from './HexGallery';
 // import BeatTapesGallery from './BeatTapesGallery';
+
+const SenderFormEmbed = memo(function SenderFormEmbed() {
+  return (
+    <div
+      style={{ textAlign: 'left', maxWidth: 560, margin: '0' }}
+      className="sender-form-field"
+      data-sender-form-id="epYnDX"
+      aria-live="polite"
+    />
+  );
+}, () => true);
 
 export default function BeatStore() {
   const [showWelcome, setShowWelcome] = useState(false);
@@ -774,7 +785,7 @@ export default function BeatStore() {
 
           <div className="subscribe-wrap">
             <div className="subscribe-left">
-              <div style={{ textAlign: 'left', maxWidth: 560, margin: '0' }} className="sender-form-field" data-sender-form-id="epYnDX"></div>
+              <SenderFormEmbed />
             </div>
             <div className="subscribe-art">
               <img src="/Honey.png" alt="Honey FX tool preview" />
@@ -805,7 +816,7 @@ export default function BeatStore() {
                 ) : (
                   <div style={{width:'100%', height:'100%', background:'linear-gradient(135deg, #272727, #1c1c1c)'}} />
                 )}
-                {currentBeat && !['ambivalence-1','gold-1','digital-strings-1'].includes(currentBeat.id) && (
+                {currentBeat && !['ambivalence-1','gold-1','digital-strings-1','beatitude-1'].includes(currentBeat.id) && (
                   <div className="thumb-overlay" aria-hidden="true">COMING SOON</div>
                 )}
               </div>
