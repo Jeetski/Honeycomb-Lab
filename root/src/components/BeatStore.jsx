@@ -107,6 +107,21 @@ const SenderFormEmbed = memo(function SenderFormEmbed() {
   );
 }, () => true);
 
+const LEAD_MAGNETS = [
+  {
+    id: 'honey',
+    src: '/Honey.png',
+    alt: 'Honey FX tool preview',
+    label: '"Honey" Multi-FX Synthesizer preset for FL Studio',
+  },
+  {
+    id: 'starter-pack',
+    src: '/Starter_Pack.png',
+    alt: "Beginner's Starter Pack lead magnet preview",
+    label: "Beginner's Starter Pack - From Zero to Hero",
+  },
+];
+
 export default function BeatStore() {
   const [showWelcome, setShowWelcome] = useState(false);
   const [currentBeat, setCurrentBeat] = useState(null);
@@ -198,6 +213,15 @@ export default function BeatStore() {
   const minutes = Math.floor((msLeft % hourMs) / minMs);
   const seconds = Math.floor((msLeft % minMs) / 1000);
   const pad = (n) => String(n).padStart(2, '0');
+  const [magnetIndex, setMagnetIndex] = useState(0);
+  useEffect(() => {
+    if (LEAD_MAGNETS.length < 2) return undefined;
+    const id = setInterval(() => {
+      setMagnetIndex((i) => (i + 1) % LEAD_MAGNETS.length);
+    }, 3000);
+    return () => clearInterval(id);
+  }, []);
+  const activeMagnet = LEAD_MAGNETS[magnetIndex];
   const saleActive = msLeft > 0;
   const endsInText = saleActive
     ? `Ends in ${days}d ${pad(hours)}h ${pad(minutes)}m ${pad(seconds)}s`
@@ -781,14 +805,30 @@ export default function BeatStore() {
           <div className="kicker">Subscribe</div>
           <h2 className="headline">Join the Hive</h2>
           <div className="underline" />
-          <p className="subtle" style={{maxWidth:760,margin:"0 auto 22px",textAlign:'center'}}>Join our email list and get access to special deals, exclusive content & free tools including the new "Honey" Multi-FX Synthesizer (patcher preset) for FLStudio.</p>
+          <p className="subtle" style={{maxWidth:760,margin:"0 auto 18px",textAlign:'center'}}>
+            Join our email list and get access to special deals, exclusive content & free tools—including the new "Honey" Multi-FX Synthesizer (patcher preset) for FLStudio—plus the Beginner's Starter Pack - From Zero to Hero.
+          </p>
+          <div className="subtle" style={{maxWidth:700,margin:'0 auto 22px',textAlign:'center'}}>
+            <strong>Starter Pack includes:</strong>
+            <div style={{display:'flex', flexWrap:'wrap', justifyContent:'center', gap:12, marginTop:8}}>
+              <span>Beginner's Guide to Recording Clean Vocals at Home</span>
+              <span>Beginner's Guide to Mix &amp; Master Your Song</span>
+              <span>Beginner's Guide to Release and Promote Your Track</span>
+            </div>
+          </div>
 
           <div className="subscribe-wrap">
             <div className="subscribe-left">
               <SenderFormEmbed />
             </div>
             <div className="subscribe-art">
-              <img src="/Honey.png" alt="Honey FX tool preview" />
+              <img
+                key={activeMagnet.id}
+                src={activeMagnet.src}
+                alt={activeMagnet.alt}
+                style={{width:'100%', height:'auto', display:'block'}}
+              />
+              <small className="subtle" style={{display:'block', marginTop:8}}>{activeMagnet.label}</small>
             </div>
           </div>
         </div>

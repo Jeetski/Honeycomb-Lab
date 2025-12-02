@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Honeycomb Lab Tools</title>
+    <meta
+      name="description"
+      content="Direct downloads for Honeycomb Lab lead magnets and production tools."
+    />
+    <style>
+      :root {
+        --bg: #0f0f10;
+        --panel: #1a1a1d;
+        --text: #f4f4f4;
+        --muted: #a6a6a6;
+        --accent: #e4a010;
+        --border: #2b2b30;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: radial-gradient(circle at top, rgba(228, 160, 16, 0.08), transparent 45%),
+          var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+      }
+
+      main {
+        width: min(960px, 100%);
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 48px clamp(24px, 6vw, 52px);
+        box-shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(32px, 5vw, 48px);
+        letter-spacing: 0.4px;
+      }
+
+      p.lead {
+        color: var(--muted);
+        line-height: 1.6;
+        margin: 16px 0 32px;
+      }
+
+      .downloads {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 20px;
+      }
+
+      article {
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 24px;
+        background: #151516;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      article h2 {
+        margin: 0;
+        font-size: 20px;
+      }
+
+      article p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.5;
+        font-size: 15px;
+      }
+
+      a.download {
+        margin-top: 8px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--accent);
+        color: #0f0f10;
+        font-weight: 700;
+        text-decoration: none;
+        padding: 12px 18px;
+        border-radius: 10px;
+        border: 1px solid #000;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+
+      a.download:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(228, 160, 16, 0.35);
+      }
+
+      small.meta {
+        color: var(--muted);
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Honeycomb Lab Tools</h1>
+        <p class="lead">
+          Hidden drop for our favorite artists. Grab the latest freebies directly&mdash;no forms,
+          no friction. These files live alongside the site under <code>/public/tools</code>, so
+          refresh here anytime to pull the newest build.
+        </p>
+      </header>
+
+      <section class="downloads" aria-label="Download links">
+        <article>
+          <h2>Honey Multi-FX Synth Patcher Preset</h2>
+          <p>
+            Our FL Studio Patcher preset that stacks honey-dripped modulation, transient shaping,
+            and spectral tricks in one rack. Drop it on keys, pads, or vocals when you need instant
+            movement.
+          </p>
+          <a class="download" href="/tools/honey.zip" download>
+            ⬇ Download Honey Multi-FX
+          </a>
+          <small class="meta">ZIP · ~24&nbsp;MB</small>
+        </article>
+
+        <article>
+          <h2>Beginner's Starter Pack &mdash; From Zero to Hero</h2>
+          <p>
+            A bundle of mini-guides, workflow checklists, and templates for artists getting their
+            first releases out the door. Vocals, mixing, promotion&mdash;it&rsquo;s all in here.
+          </p>
+          <a class="download" href="/tools/beginners_starter_pack_from_zero_to_hero.zip" download>
+            ⬇ Download Starter Pack
+          </a>
+          <small class="meta">ZIP · ~12&nbsp;MB</small>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>
