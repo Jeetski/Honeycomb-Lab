@@ -63,4 +63,5 @@ set "EXIT_CODE=0"
 
 :END
 pause
-exit /b %EXIT_CODE%
+echo [INFO] Script finished with exit code %EXIT_CODE%. Type "exit" to close this window.
+cmd /k
