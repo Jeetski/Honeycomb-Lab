@@ -2,8 +2,7 @@ import { memo, useState, useEffect, useRef } from 'react';
 import './BeatStore.css';
 
 function CompareLicensesModal({ onClose, endsInText }) {
-  const sharedText = 'All licenses are non-exclusive unless stated otherwise. All licenses include a 50/50 songwriting split.';
-  const ownershipNote = 'Artist owns the final song master. Producer and artist share songwriting credit equally.';
+  const sharedText = 'All licenses are non-exclusive unless stated otherwise. All licenses include a 50/50 songwriting split. Artist owns the final song master. Producer and artist share songwriting credit equally.';
   return (
     <div className="cmp-backdrop" onClick={onClose}>
       <div className="cmp-modal" onClick={(e) => e.stopPropagation()}>
@@ -18,6 +17,7 @@ function CompareLicensesModal({ onClose, endsInText }) {
         </div>
         <div className="cmp-body" style={{ gridTemplateColumns: '1fr 1fr 1fr', alignItems: 'stretch' }}>
           <div className="cmp-col" style={{ borderTop: '3px solid #C0C0C0' }}>
+            <span className="cmp-badge" aria-label="Indie release">Indie Release</span>
             <h4 style={{ color: '#C0C0C0', display: 'flex', alignItems: 'center', gap: 8 }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="#C0C0C0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
                 <path d="M3 14l3-6h12l3 6H3zm2 2h14v2H5v-2z"/>
@@ -41,7 +41,7 @@ function CompareLicensesModal({ onClose, endsInText }) {
             </ul>
           </div>
           <div className="cmp-col" style={{ borderTop: '3px solid #b76e79' }}>
-            <span className="cmp-badge" aria-label="Most popular">Most Popular</span>
+            <span className="cmp-badge" aria-label="Commercial release">Commercial Release</span>
             <h4 style={{ color: '#b76e79', display: 'flex', alignItems: 'center', gap: 8 }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="#b76e79" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
                 <path d="M3 14l3-6h12l3 6H3zm2 2h14v2H5v-2z"/>
@@ -65,6 +65,7 @@ function CompareLicensesModal({ onClose, endsInText }) {
             </ul>
           </div>
           <div className="cmp-col" style={{ borderTop: '3px solid #00b5e2' }}>
+            <span className="cmp-badge" aria-label="Major or label release">Major Release</span>
             <h4 style={{ color: '#00b5e2', display: 'flex', alignItems: 'center', gap: 8 }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="#00b5e2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 2l6 7-6 13-6-13 6-7zm0 4.5L9.5 9h5L12 6.5z"/>
@@ -89,7 +90,6 @@ function CompareLicensesModal({ onClose, endsInText }) {
             </ul>
           </div>
           <div className="cmp-info" role="note" style={{ gridColumn: '1 / -1' }}>{sharedText}</div>
-          <div className="cmp-info" role="note" style={{ gridColumn: '1 / -1', marginTop: 8 }}>{ownershipNote}</div>
         </div>
       </div>
     </div>
@@ -118,7 +118,7 @@ const LEAD_MAGNETS = [
   },
   {
     id: 'starter-pack',
-    src: '/Starter_Pack.png',
+    src: '/Starter_Pack.jpg',
     alt: "Beginner's Starter Pack lead magnet preview",
     label: "Beginner's Starter Pack - From Zero to Hero",
   },
@@ -201,11 +201,14 @@ export default function BeatStore() {
   };
   // Launch sale countdown timer
   const [nowTs, setNowTs] = useState(() => Date.now());
-  // Deadline: End of the current year (Dec 31, 23:59:59 local time)
-  const launchDeadlineTs = (() => {
-    const d = new Date(nowTs);
-    return new Date(d.getFullYear(), 11, 31, 23, 59, 59, 999).getTime();
-  })();
+  // Deadline: 2 months from initial page load
+  const launchDeadlineRef = useRef(null);
+  if (!launchDeadlineRef.current) {
+    const d = new Date();
+    d.setMonth(d.getMonth() + 2);
+    launchDeadlineRef.current = d.getTime();
+  }
+  const launchDeadlineTs = launchDeadlineRef.current;
   const msLeft = Math.max(0, launchDeadlineTs - nowTs);
   const dayMs = 24 * 60 * 60 * 1000;
   const hourMs = 60 * 60 * 1000;
@@ -515,7 +518,7 @@ export default function BeatStore() {
         .subscribe-wrap{display:grid;grid-template-columns:minmax(420px,560px) 520px;gap:28px;align-items:center;justify-content:center}
         @media (max-width:1024px){.subscribe-wrap{grid-template-columns:1fr;justify-content:stretch}}
         .subscribe-left{text-align:left}
-        .subscribe-art{display:flex;align-items:center;justify-content:center}
+        .subscribe-art{display:flex;flex-direction:column;align-items:center;justify-content:center}
         .subscribe-art img{max-width:100%;width:540px;height:auto;border-radius:16px;border:1px solid var(--line);background:#1e1e1e;margin-top:24px}
         /* SUBSCRIBE form sizing */
         .sub-form{display:grid;grid-template-columns:1fr 140px;gap:12px;max-width:760px;margin:0 auto}
@@ -1104,6 +1107,7 @@ export default function BeatStore() {
                 <li>Unlimited streams</li>
                 <li>Unlimited radio stations</li>
                 <li>WAV File & Track Stems</li>
+                <li>.FLP project file and Zipped Loop Package</li>
                 <li>Keep 100% of your new song's sync royalties</li>
                 <li>Get your song featured on our website</li>
                 <li>Credit optional</li>
