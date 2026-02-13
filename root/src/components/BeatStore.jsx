@@ -2,7 +2,8 @@ import { memo, useState, useEffect, useRef } from 'react';
 import './BeatStore.css';
 
 function CompareLicensesModal({ onClose, endsInText }) {
-  const sharedText = 'All licenses are non-exclusive. All licenses include a 50/50 songwriting (production) split.';
+  const sharedText = 'All licenses are non-exclusive unless stated otherwise. All licenses include a 50/50 songwriting split.';
+  const ownershipNote = 'Artist owns the final song master. Producer and artist share songwriting credit equally.';
   return (
     <div className="cmp-backdrop" onClick={onClose}>
       <div className="cmp-modal" onClick={(e) => e.stopPropagation()}>
@@ -34,7 +35,7 @@ function CompareLicensesModal({ onClose, endsInText }) {
               <li>Unlimited modifications</li>
               <li>Up to 50,000 streams</li>
               <li>Up to 5 radio stations</li>
-              <li>Keep 50% of your new song's sync royalties</li>
+              <li>Keep 50% of your song's master sync royalties</li>
               <li>Tagged</li>
               <li>Credit required: Prod. by Honeycomb Lab</li>
             </ul>
@@ -58,7 +59,7 @@ function CompareLicensesModal({ onClose, endsInText }) {
               <li>Unlimited modifications</li>
               <li>Up to 100,000 streams</li>
               <li>Up to 10 radio stations</li>
-              <li>Keep 100% of your new song's sync royalties</li>
+              <li>Keep 100% of your song's master sync royalties</li>
               <li>Tag optional</li>
               <li>Credit required: Prod. by Honeycomb Lab</li>
             </ul>
@@ -70,7 +71,7 @@ function CompareLicensesModal({ onClose, endsInText }) {
               </svg>
               Diamond
             </h4>
-            <strong>Unlimited License</strong>
+            <strong>Unlimited Use License</strong>
             <div className="price" style={{margin: '8px 0 10px'}}>
               <span style={{textDecoration:'line-through', color:'var(--muted)', marginRight:8, fontWeight:700}}>$440</span>
               <span style={{color:'var(--accent)', fontWeight:900, fontSize:'20px'}}>$293</span>
@@ -81,13 +82,14 @@ function CompareLicensesModal({ onClose, endsInText }) {
               <li>Unlimited modifications</li>
               <li>Unlimited streams</li>
               <li>Unlimited radio stations</li>
-              <li>Keep 100% of your new song's sync royalties</li>
+              <li>Keep 100% of your song's master sync royalties</li>
               <li>Get your song featured on our website</li>
               <li>Tag optional</li>
               <li>Credit optional</li>
             </ul>
           </div>
           <div className="cmp-info" role="note" style={{ gridColumn: '1 / -1' }}>{sharedText}</div>
+          <div className="cmp-info" role="note" style={{ gridColumn: '1 / -1', marginTop: 8 }}>{ownershipNote}</div>
         </div>
       </div>
     </div>
@@ -856,7 +858,7 @@ export default function BeatStore() {
                 ) : (
                   <div style={{width:'100%', height:'100%', background:'linear-gradient(135deg, #272727, #1c1c1c)'}} />
                 )}
-                {currentBeat && !['ambivalence-1','gold-1','digital-strings-1','beatitude-1'].includes(currentBeat.id) && (
+                {currentBeat && !['ambivalence-1','gold-1','digital-strings-1','beatitude-1','malice-1','quixotic-1'].includes(currentBeat.id) && (
                   <div className="thumb-overlay" aria-hidden="true">COMING SOON</div>
                 )}
               </div>
@@ -1095,8 +1097,9 @@ export default function BeatStore() {
             <div className="custom-features">
               <h3 style={{ marginTop: 0, color: 'var(--accent)' }}>Bespoke & Exclusive Production</h3>
               <p style={{color: 'var(--text)'}}>You get a beat tailored to your exact vision, and it's yours alone. Once you purchase it, it's retired from our catalog forever.</p>
+              <p style={{color: 'var(--text)'}}>This beat will never be licensed to any other party.</p>
               <ul className="checklist" style={{ color: 'var(--muted)' }}>
-                <li>Exclusive Rights</li>
+                <li>Exclusive use of the beat</li>
                 <li>Unlimited Use & Modifications</li>
                 <li>Unlimited streams</li>
                 <li>Unlimited radio stations</li>
