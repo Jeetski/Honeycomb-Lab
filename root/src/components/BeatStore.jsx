@@ -3,6 +3,7 @@ import './BeatStore.css';
 
 function CompareLicensesModal({ onClose, endsInText }) {
   const sharedText = 'All licenses are non-exclusive unless stated otherwise. All licenses include a 50/50 songwriting split. Artist owns the final song master. Producer and artist share songwriting credit equally.';
+  const iconStyle = { width: 36, height: 36, objectFit: 'contain', display: 'block' };
   return (
     <div className="cmp-backdrop" onClick={onClose}>
       <div className="cmp-modal" onClick={(e) => e.stopPropagation()}>
@@ -17,17 +18,21 @@ function CompareLicensesModal({ onClose, endsInText }) {
         </div>
         <div className="cmp-body" style={{ gridTemplateColumns: '1fr 1fr 1fr', alignItems: 'stretch' }}>
           <div className="cmp-col" style={{ borderTop: '3px solid #C0C0C0' }}>
-            <span className="cmp-badge" aria-label="Indie release">Indie Release</span>
             <h4 style={{ color: '#C0C0C0', display: 'flex', alignItems: 'center', gap: 8 }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="#C0C0C0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-                <path d="M3 14l3-6h12l3 6H3zm2 2h14v2H5v-2z"/>
-              </svg>
+              <img src="/licenses/Silver_No_Background.png" alt="" aria-hidden="true" style={iconStyle} />
               Silver
             </h4>
             <strong>WAV License</strong>
-            <div className="price" style={{margin: '8px 0 10px'}}>
-              <span style={{textDecoration:'line-through', color:'var(--muted)', marginRight:8, fontWeight:700}}>$44</span>
+            <div className="price" style={{margin: '8px 0 10px', display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap'}}>
+              <span style={{textDecoration:'line-through', color:'var(--muted)', fontWeight:700}}>$44</span>
               <span style={{color:'var(--accent)', fontWeight:900, fontSize:'20px'}}>$29</span>
+              <span
+                className="cmp-badge"
+                aria-label="Indie release"
+                style={{ position: 'static', top: 'auto', right: 'auto', boxShadow: 'none', display: 'inline-flex', alignItems: 'center', marginLeft: 'auto' }}
+              >
+                Indie Release
+              </span>
             </div>
             <div style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 6 }}>For independent creators starting out</div>
             <ul className="cmp-list">
@@ -35,23 +40,27 @@ function CompareLicensesModal({ onClose, endsInText }) {
               <li>Unlimited modifications</li>
               <li>Up to 50,000 streams</li>
               <li>Up to 5 radio stations</li>
-              <li>Keep 50% of your song's master sync royalties</li>
+              <li>50/50 sync royalties (standard producer split)</li>
               <li>Tagged</li>
               <li>Credit required: Prod. by Honeycomb Lab</li>
             </ul>
           </div>
           <div className="cmp-col" style={{ borderTop: '3px solid #b76e79' }}>
-            <span className="cmp-badge" aria-label="Commercial release">Commercial Release</span>
             <h4 style={{ color: '#b76e79', display: 'flex', alignItems: 'center', gap: 8 }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="#b76e79" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-                <path d="M3 14l3-6h12l3 6H3zm2 2h14v2H5v-2z"/>
-              </svg>
+              <img src="/licenses/Rose-Gold_No_Background.png" alt="" aria-hidden="true" style={iconStyle} />
               Rose Gold
             </h4>
             <strong>WAV License</strong>
-            <div className="price" style={{margin: '8px 0 10px'}}>
-              <span style={{textDecoration:'line-through', color:'var(--muted)', marginRight:8, fontWeight:700}}>$89</span>
+            <div className="price" style={{margin: '8px 0 10px', display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap'}}>
+              <span style={{textDecoration:'line-through', color:'var(--muted)', fontWeight:700}}>$89</span>
               <span style={{color:'var(--accent)', fontWeight:900, fontSize:'20px'}}>$59</span>
+              <span
+                className="cmp-badge"
+                aria-label="Commercial release"
+                style={{ position: 'static', top: 'auto', right: 'auto', boxShadow: 'none', display: 'inline-flex', alignItems: 'center', marginLeft: 'auto' }}
+              >
+                Commercial Release
+              </span>
             </div>
             <div style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 6 }}>For artists ready to release commercially</div>
             <ul className="cmp-list">
@@ -65,17 +74,21 @@ function CompareLicensesModal({ onClose, endsInText }) {
             </ul>
           </div>
           <div className="cmp-col" style={{ borderTop: '3px solid #00b5e2' }}>
-            <span className="cmp-badge" aria-label="Major or label release">Major Release</span>
             <h4 style={{ color: '#00b5e2', display: 'flex', alignItems: 'center', gap: 8 }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="#00b5e2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2l6 7-6 13-6-13 6-7zm0 4.5L9.5 9h5L12 6.5z"/>
-              </svg>
+              <img src="/licenses/Diamond_No_Background.png" alt="" aria-hidden="true" style={iconStyle} />
               Diamond
             </h4>
             <strong>Unlimited Use License</strong>
-            <div className="price" style={{margin: '8px 0 10px'}}>
-              <span style={{textDecoration:'line-through', color:'var(--muted)', marginRight:8, fontWeight:700}}>$440</span>
+            <div className="price" style={{margin: '8px 0 10px', display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap'}}>
+              <span style={{textDecoration:'line-through', color:'var(--muted)', fontWeight:700}}>$440</span>
               <span style={{color:'var(--accent)', fontWeight:900, fontSize:'20px'}}>$293</span>
+              <span
+                className="cmp-badge"
+                aria-label="Major or label release"
+                style={{ position: 'static', top: 'auto', right: 'auto', boxShadow: 'none', display: 'inline-flex', alignItems: 'center', marginLeft: 'auto' }}
+              >
+                Major Release
+              </span>
             </div>
             <div style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 6 }}>Full creative control</div>
             <ul className="cmp-list">
@@ -125,6 +138,17 @@ const LEAD_MAGNETS = [
 ];
 
 export default function BeatStore() {
+  const currentYear = new Date().getFullYear();
+  const showcaseVideos = [
+    {
+      id: '3z_ZIKVgems',
+      title: 'HIXXEL - SUPERMAN (BG Remix) Lyric Video',
+    },
+    {
+      id: 'RxSz-jZJjKU',
+      title: 'Ky Steezy - STZYWRLD [Official Audio]',
+    },
+  ];
   const [showWelcome, setShowWelcome] = useState(false);
   const [currentBeat, setCurrentBeat] = useState(null);
   const audioRef = useRef(null);
@@ -250,7 +274,9 @@ export default function BeatStore() {
   // More dropdown
   const [moreOpen, setMoreOpen] = useState(false);
   const [showCompare, setShowCompare] = useState(false);
+  const [selectedShowcaseVideoId, setSelectedShowcaseVideoId] = useState(showcaseVideos[0].id);
   const moreRef = useRef(null);
+  const selectedShowcaseVideo = showcaseVideos.find((v) => v.id === selectedShowcaseVideoId) || showcaseVideos[0];
 
   useEffect(() => {
     const onDocClick = (e) => {
@@ -438,6 +464,8 @@ export default function BeatStore() {
         .brand-row{display:inline-flex;align-items:center;gap:8px}
         .brand-mark{width:48px;height:48px;display:block;transition:transform .2s ease}
         .brand-mark:hover{transform:scale(1.06)}
+        .custom-license-icon{width:48px;height:48px;object-fit:contain;display:block;transition:transform .2s ease}
+        .custom-license-icon:hover{transform:scale(1.06)}
         .hero-brand h1{font-size:48px;line-height:1.1;margin:0;font-weight:900;letter-spacing:.5px;text-align:center}
         .tagline{color:var(--muted);font-size:16px;line-height:1.6;text-align:center;max-width:820px;margin-top:2px}
         /* HERO GRID (desktop 3 cols; mobile 1 col) */
@@ -902,9 +930,18 @@ export default function BeatStore() {
                     <small className="subtle">Free for nonprofit use (tagged)</small>
                   </div>
                   <div style={{display:'flex', flexWrap:'wrap', gap:10, marginTop:8}}>
-                    <button type="button" className="btn-tier btn-silver" onClick={() => handleBuy('silver')}>Buy Silver Limited License</button>
-                    <button type="button" className="btn-tier btn-rose" onClick={() => handleBuy('roseGold')}>Buy Rose Gold Expanded License</button>
-                    <button type="button" className="btn-tier btn-diamond" onClick={() => handleBuy('diamond')}>Buy Diamond Unlimited License</button>
+                    <button type="button" className="btn-tier btn-silver" onClick={() => handleBuy('silver')} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                      <img src="/licenses/Silver_No_Background.png" alt="" aria-hidden="true" style={{ width: 32, height: 32, objectFit: 'contain' }} />
+                      Buy Silver Limited License
+                    </button>
+                    <button type="button" className="btn-tier btn-rose" onClick={() => handleBuy('roseGold')} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                      <img src="/licenses/Rose-Gold_No_Background.png" alt="" aria-hidden="true" style={{ width: 32, height: 32, objectFit: 'contain' }} />
+                      Buy Rose Gold Expanded License
+                    </button>
+                    <button type="button" className="btn-tier btn-diamond" onClick={() => handleBuy('diamond')} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                      <img src="/licenses/Diamond_No_Background.png" alt="" aria-hidden="true" style={{ width: 32, height: 32, objectFit: 'contain' }} />
+                      Buy Diamond Unlimited License
+                    </button>
                     <button type="button" className="btn-ghost" onClick={() => setShowCompare(true)}>Compare Licenses</button>
                   </div>
                   </>
@@ -926,14 +963,38 @@ export default function BeatStore() {
             <iframe
               width="100%"
               height="100%"
-              src="https://www.youtube.com/embed/3z_ZIKVgems"
-              title="Featured Track"
+              src={`https://www.youtube.com/embed/${selectedShowcaseVideo.id}`}
+              title={selectedShowcaseVideo.title}
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               loading="lazy"
               allowFullScreen
               style={{position: 'absolute', top: 0, left: 0, borderRadius: '16px'}}
             ></iframe>
+          </div>
+          <div style={{ maxWidth: '860px', margin: '14px auto 0', display: 'grid', gap: 8 }}>
+            {showcaseVideos.map((video) => {
+              const active = selectedShowcaseVideoId === video.id;
+              return (
+                <button
+                  key={video.id}
+                  type="button"
+                  onClick={() => setSelectedShowcaseVideoId(video.id)}
+                  style={{
+                    textAlign: 'left',
+                    padding: '10px 12px',
+                    borderRadius: 10,
+                    border: active ? '1px solid var(--accent)' : '1px solid var(--line)',
+                    background: active ? 'rgba(228,160,16,0.12)' : '#141416',
+                    color: 'var(--text)',
+                    fontWeight: active ? 800 : 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  {video.title}
+                </button>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -1098,7 +1159,10 @@ export default function BeatStore() {
           </div>
           <div className="custom-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1.1fr', gap: '28px', alignItems: 'start', marginTop: '28px' }}>
             <div className="custom-features">
-              <h3 style={{ marginTop: 0, color: 'var(--accent)' }}>Bespoke & Exclusive Production</h3>
+              <h3 style={{ marginTop: 0, color: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', textAlign: 'center', gap: 10 }}>
+                <img src="/licenses/Custom_No_Background.png" alt="" aria-hidden="true" className="custom-license-icon" />
+                Bespoke & Exclusive Production
+              </h3>
               <p style={{color: 'var(--text)'}}>You get a beat tailored to your exact vision, and it's yours alone. Once you purchase it, it's retired from our catalog forever.</p>
               <p style={{color: 'var(--text)'}}>This beat will never be licensed to any other party.</p>
               <ul className="checklist" style={{ color: 'var(--muted)' }}>
@@ -1148,7 +1212,7 @@ export default function BeatStore() {
       <footer className="footer">
         <div className="container">
           <a href="https://honeycomblab.art" rel="noopener noreferrer">honeycomblab.art</a>
-          <small>© Honeycomb Lab 2025</small>
+          <small>&copy; Honeycomb Lab {currentYear}</small>
         </div>
       </footer>
 
