@@ -1,5 +1,6 @@
 import { memo, useState, useEffect, useRef } from 'react';
 import './BeatStore.css';
+import beatsData from '../data/beats.json';
 
 function CompareLicensesModal({ onClose, endsInText }) {
   const sharedText = 'All licenses are non-exclusive unless stated otherwise. All licenses include a 50/50 songwriting split. Artist owns the final song master. Producer and artist share songwriting credit equally.';
@@ -81,7 +82,11 @@ function CompareLicensesModal({ onClose, endsInText }) {
             <strong>Unlimited Use License</strong>
             <div className="price" style={{margin: '8px 0 10px', display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap'}}>
               <span style={{textDecoration:'line-through', color:'var(--muted)', fontWeight:700}}>$440</span>
-              <span style={{color:'var(--accent)', fontWeight:900, fontSize:'20px'}}>$293</span>
+              <span style={{textDecoration:'line-through', color:'var(--muted)', fontWeight:800}}>$293</span>
+              <span style={{color:'#ff5a5a', fontWeight:900, fontSize:'20px'}}>$146.50</span>
+              <span style={{ background: 'rgba(255,90,90,0.16)', color: '#ff8f8f', border: '1px solid rgba(255,90,90,0.35)', fontWeight: 800, padding: '2px 8px', borderRadius: 999, fontSize: 11 }}>
+                Use code VIP50
+              </span>
               <span
                 className="cmp-badge"
                 aria-label="Major or label release"
@@ -137,6 +142,24 @@ const LEAD_MAGNETS = [
   },
 ];
 
+const SECTION_ALIASES = {
+  tracks: 'player',
+  latest: 'player',
+  'latest-tracks': 'player',
+  beats: 'player',
+  producer: 'about',
+  artists: 'team',
+  email: 'subscribe',
+  contact: 'subscribe',
+  shop: 'merch',
+};
+
+const normalizeHashToken = (value) => String(value || '')
+  .toLowerCase()
+  .replace(/^#/, '')
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/^-+|-+$/g, '');
+
 export default function BeatStore() {
   const currentYear = new Date().getFullYear();
   const showcaseVideos = [
@@ -151,8 +174,23 @@ export default function BeatStore() {
   ];
   const [showWelcome, setShowWelcome] = useState(false);
   const [currentBeat, setCurrentBeat] = useState(null);
+  const [requestedBeatId, setRequestedBeatId] = useState(null);
   const audioRef = useRef(null);
   const downloadingRef = useRef(false);
+  const [miniPlaying, setMiniPlaying] = useState(false);
+  const [miniCurrentTime, setMiniCurrentTime] = useState(0);
+  const [miniDuration, setMiniDuration] = useState(0);
+  const [miniMuted, setMiniMuted] = useState(false);
+  const [miniVolume, setMiniVolume] = useState(1);
+  const [miniLoop, setMiniLoop] = useState(false);
+  const [miniCollapsed, setMiniCollapsed] = useState(false);
+  const [miniDesktop, setMiniDesktop] = useState(false);
+  const [miniPosition, setMiniPosition] = useState({ x: 0, y: 0 });
+  const beatByTokenRef = useRef(null);
+  const miniPlayerRef = useRef(null);
+  const miniDragRef = useRef({ active: false, offsetX: 0, offsetY: 0 });
+  const miniPositionReadyRef = useRef(false);
+  const miniQueue = (Array.isArray(beatsData) ? beatsData : []).filter((beat) => Boolean(beat?.preview));
   // Reviews slider state
   const reviews = [
     {
@@ -219,6 +257,32 @@ export default function BeatStore() {
     return text;
   };
 
+  const formatMetaLabel = (value) => String(value || '')
+    .split(' ')
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+  const formatTime = (seconds) => {
+    const s = Number.isFinite(seconds) ? Math.max(0, Math.floor(seconds)) : 0;
+    const mm = Math.floor(s / 60);
+    const ss = String(s % 60).padStart(2, '0');
+    return `${mm}:${ss}`;
+  };
+
+  if (!beatByTokenRef.current) {
+    const map = new Map();
+    for (const beat of (Array.isArray(beatsData) ? beatsData : [])) {
+      const tokens = new Set([
+        normalizeHashToken(beat?.id),
+        normalizeHashToken(beat?.title),
+      ]);
+      for (const token of tokens) {
+        if (token) map.set(token, beat);
+      }
+    }
+    beatByTokenRef.current = map;
+  }
+
   const handleSubscribe = (e) => {
     e.preventDefault();
     setShowWelcome(true);
@@ -278,6 +342,28 @@ export default function BeatStore() {
   const moreRef = useRef(null);
   const selectedShowcaseVideo = showcaseVideos.find((v) => v.id === selectedShowcaseVideoId) || showcaseVideos[0];
 
+  const handleHashNavigation = () => {
+    if (typeof window === 'undefined') return;
+    const raw = window.location.hash || '';
+    const token = normalizeHashToken(raw);
+    if (!token) return;
+
+    const sectionId = SECTION_ALIASES[token] || token;
+    const sectionEl = document.getElementById(sectionId);
+    if (sectionEl) {
+      sectionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+
+    const beat = beatByTokenRef.current?.get(token);
+    if (beat) {
+      setRequestedBeatId(beat.id);
+      setCurrentBeat(beat);
+      const playerEl = document.getElementById('player');
+      if (playerEl) playerEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   useEffect(() => {
     const onDocClick = (e) => {
       if (contactRef.current && !contactRef.current.contains(e.target)) setContactOpen(false);
@@ -285,6 +371,17 @@ export default function BeatStore() {
     };
     document.addEventListener('mousedown', onDocClick);
     return () => document.removeEventListener('mousedown', onDocClick);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const onHashChange = () => handleHashNavigation();
+    window.addEventListener('hashchange', onHashChange);
+    const timer = setTimeout(() => handleHashNavigation(), 120);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('hashchange', onHashChange);
+    };
   }, []);
 
   const handleCopy = async () => {
@@ -306,6 +403,235 @@ export default function BeatStore() {
       setTimeout(play, 50)
     }
   }, [currentBeat])
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return undefined;
+
+    const syncFromAudio = () => {
+      setMiniPlaying(!audio.paused);
+      setMiniCurrentTime(Number.isFinite(audio.currentTime) ? audio.currentTime : 0);
+      setMiniDuration(Number.isFinite(audio.duration) ? audio.duration : 0);
+      setMiniMuted(Boolean(audio.muted));
+      setMiniVolume(Number.isFinite(audio.volume) ? audio.volume : 1);
+    };
+
+    const onPlay = () => syncFromAudio();
+    const onPause = () => syncFromAudio();
+    const onTimeUpdate = () => syncFromAudio();
+    const onLoadedMeta = () => syncFromAudio();
+    const onEnded = () => syncFromAudio();
+    const onSeeked = () => syncFromAudio();
+    const onVolumeChange = () => {
+      setMiniMuted(Boolean(audio.muted));
+      setMiniVolume(Number.isFinite(audio.volume) ? audio.volume : 1);
+    };
+
+    audio.addEventListener('play', onPlay);
+    audio.addEventListener('pause', onPause);
+    audio.addEventListener('timeupdate', onTimeUpdate);
+    audio.addEventListener('loadedmetadata', onLoadedMeta);
+    audio.addEventListener('durationchange', onLoadedMeta);
+    audio.addEventListener('ended', onEnded);
+    audio.addEventListener('seeked', onSeeked);
+    audio.addEventListener('seeking', onSeeked);
+    audio.addEventListener('volumechange', onVolumeChange);
+
+    const syncTimer = setInterval(syncFromAudio, 200);
+    syncFromAudio();
+
+    return () => {
+      clearInterval(syncTimer);
+      audio.removeEventListener('play', onPlay);
+      audio.removeEventListener('pause', onPause);
+      audio.removeEventListener('timeupdate', onTimeUpdate);
+      audio.removeEventListener('loadedmetadata', onLoadedMeta);
+      audio.removeEventListener('durationchange', onLoadedMeta);
+      audio.removeEventListener('ended', onEnded);
+      audio.removeEventListener('seeked', onSeeked);
+      audio.removeEventListener('seeking', onSeeked);
+      audio.removeEventListener('volumechange', onVolumeChange);
+    };
+  }, [currentBeat]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.loop = miniLoop;
+  }, [miniLoop, currentBeat]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const clampPosition = (x, y) => {
+      const margin = 8;
+      const width = miniPlayerRef.current?.offsetWidth || 214;
+      const height = miniPlayerRef.current?.offsetHeight || 250;
+      const maxX = Math.max(margin, window.innerWidth - width - margin);
+      const maxY = Math.max(margin, window.innerHeight - height - margin);
+      return {
+        x: Math.min(Math.max(margin, x), maxX),
+        y: Math.min(Math.max(margin, y), maxY),
+      };
+    };
+
+    const syncMiniViewportMode = () => {
+      const isDesktop = window.innerWidth >= 900;
+      setMiniDesktop(isDesktop);
+      setMiniPosition((prev) => {
+        if (!miniPositionReadyRef.current) {
+          miniPositionReadyRef.current = true;
+          const width = miniPlayerRef.current?.offsetWidth || 214;
+          const height = miniPlayerRef.current?.offsetHeight || 250;
+          return {
+            x: Math.max(8, window.innerWidth - width - 16),
+            y: Math.max(8, window.innerHeight - height - 16),
+          };
+        }
+        if (!isDesktop) return prev;
+        return clampPosition(prev.x, prev.y);
+      });
+    };
+
+    syncMiniViewportMode();
+    window.addEventListener('resize', syncMiniViewportMode);
+    return () => window.removeEventListener('resize', syncMiniViewportMode);
+  }, [miniCollapsed]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const clampPosition = (x, y) => {
+      const margin = 8;
+      const width = miniPlayerRef.current?.offsetWidth || 214;
+      const height = miniPlayerRef.current?.offsetHeight || 250;
+      const maxX = Math.max(margin, window.innerWidth - width - margin);
+      const maxY = Math.max(margin, window.innerHeight - height - margin);
+      return {
+        x: Math.min(Math.max(margin, x), maxX),
+        y: Math.min(Math.max(margin, y), maxY),
+      };
+    };
+
+    const handlePointerMove = (event) => {
+      if (!miniDragRef.current.active || !miniDesktop || miniCollapsed) return;
+      event.preventDefault();
+      const nextX = event.clientX - miniDragRef.current.offsetX;
+      const nextY = event.clientY - miniDragRef.current.offsetY;
+      setMiniPosition(clampPosition(nextX, nextY));
+    };
+
+    const stopDrag = () => {
+      miniDragRef.current.active = false;
+    };
+
+    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointerup', stopDrag);
+    window.addEventListener('pointercancel', stopDrag);
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', stopDrag);
+      window.removeEventListener('pointercancel', stopDrag);
+    };
+  }, [miniDesktop, miniCollapsed]);
+
+  const startMiniDrag = (event) => {
+    if (!miniDesktop || miniCollapsed || event.button !== 0) return;
+    const target = event.target;
+    if (target instanceof Element) {
+      const interactive = target.closest('button, a, input, select, textarea, label, [role="button"], [data-no-drag="true"]');
+      if (interactive) return;
+    }
+    const panelRect = miniPlayerRef.current?.getBoundingClientRect();
+    if (!panelRect) return;
+    miniDragRef.current = {
+      active: true,
+      offsetX: event.clientX - panelRect.left,
+      offsetY: event.clientY - panelRect.top,
+    };
+  };
+
+  const toggleMiniPlayback = async () => {
+    const audio = audioRef.current;
+    if (!audio || !currentBeat?.preview) return;
+    if (audio.paused) {
+      try {
+        await audio.play();
+      } catch {
+        // no-op
+      }
+      return;
+    }
+    audio.pause();
+  };
+
+  const handleMiniSeek = (value) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    const next = Number(value);
+    if (!Number.isFinite(next)) return;
+    audio.currentTime = next;
+    setMiniCurrentTime(next);
+  };
+
+  const setActiveMiniBeat = (beat) => {
+    if (!beat) return;
+    setCurrentBeat(beat);
+    setRequestedBeatId(beat.id);
+  };
+
+  const playPreviousBeat = () => {
+    if (!miniQueue.length) return;
+    const idx = Math.max(0, miniQueue.findIndex((beat) => beat.id === currentBeat?.id));
+    const prevIdx = (idx - 1 + miniQueue.length) % miniQueue.length;
+    setActiveMiniBeat(miniQueue[prevIdx]);
+  };
+
+  const playNextBeat = () => {
+    if (!miniQueue.length) return;
+    const idx = Math.max(0, miniQueue.findIndex((beat) => beat.id === currentBeat?.id));
+    const nextIdx = (idx + 1) % miniQueue.length;
+    setActiveMiniBeat(miniQueue[nextIdx]);
+  };
+
+  const shuffleBeat = () => {
+    if (!miniQueue.length) return;
+    if (miniQueue.length === 1) {
+      setActiveMiniBeat(miniQueue[0]);
+      return;
+    }
+    const currentId = currentBeat?.id;
+    let next = miniQueue[Math.floor(Math.random() * miniQueue.length)];
+    while (next.id === currentId) {
+      next = miniQueue[Math.floor(Math.random() * miniQueue.length)];
+    }
+    setActiveMiniBeat(next);
+  };
+
+  const toggleMiniLoop = () => setMiniLoop((prev) => !prev);
+
+  const toggleMiniMute = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.muted = !audio.muted;
+    setMiniMuted(audio.muted);
+  };
+
+  const handleMiniVolume = (value) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    const next = Number(value);
+    if (!Number.isFinite(next)) return;
+    audio.volume = Math.max(0, Math.min(1, next));
+    if (audio.volume > 0 && audio.muted) audio.muted = false;
+    setMiniVolume(audio.volume);
+    setMiniMuted(audio.muted);
+  };
+
+  const jumpToMainPlayer = () => {
+    const playerEl = document.getElementById('player');
+    if (playerEl) playerEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   const handleDownload = async () => {
     if (!currentBeat?.preview || downloadingRef.current) return;
@@ -874,15 +1200,42 @@ export default function BeatStore() {
           <h2 className="headline">Latest Tracks</h2>
           <div className="underline" />
           {currentBeat && (
-            <div className="subtle" style={{marginTop:8}}>(Now Playing: {currentBeat.title})</div>
+            <div
+              className="subtle"
+              style={{
+                marginTop: 8,
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 10,
+                padding: '6px 10px',
+                borderRadius: 999,
+                border: '1px solid var(--line)',
+                background: 'rgba(20,20,20,0.7)',
+              }}
+            >
+              {currentBeat?.artwork && (
+                <img
+                  src={currentBeat.artwork}
+                  alt=""
+                  aria-hidden="true"
+                  style={{ width: 28, height: 28, borderRadius: 999, objectFit: 'cover', border: '1px solid var(--line)' }}
+                />
+              )}
+              <span>Now Playing: {currentBeat.title}</span>
+            </div>
           )}
           <div className="hex-gallery-wrapper">
-            <HexGallery radius={2} onSelect={setCurrentBeat} audioRef={audioRef} />
+            <HexGallery
+              radius={2}
+              onSelect={setCurrentBeat}
+              audioRef={audioRef}
+              requestedBeatId={requestedBeatId}
+            />
           </div>
 
           {/* Mini Player */}
           <div className="card" style={{marginTop:16}}>
-            <div style={{display:'grid', gridTemplateColumns:'72px 1fr', gap:14, alignItems:'center'}}>
+            <div style={{display:'grid', gridTemplateColumns:'72px 1fr', gap:14, alignItems:'start'}}>
               <div className="thumb-wrap" style={{width:72, height:72, borderRadius:12, background:'#1e1e1e', overflow:'hidden', border:'1px solid var(--line)'}}>
                 {currentBeat?.artwork ? (
                   <img src={currentBeat.artwork} alt="" style={{width:'100%', height:'100%', objectFit:'cover', display:'block'}} />
@@ -897,9 +1250,50 @@ export default function BeatStore() {
                 <div style={{display:'flex', justifyContent:'space-between', alignItems:'baseline', gap:10}}>
                   <strong style={{fontSize:18}}>{currentBeat?.title || 'Select a hex to play'}</strong>
                   {currentBeat && (
-                    <small className="subtle">{currentBeat.bpm} BPM • {currentBeat.key}</small>
+                    <small className="subtle">
+                      {currentBeat?.bpm ? `${currentBeat.bpm} BPM` : 'BPM N/A'} • {currentBeat?.key || 'Key N/A'}
+                    </small>
                   )}
                 </div>
+                {currentBeat?.description && (
+                  <p className="subtle" style={{ marginTop: 8, marginBottom: 0, fontSize: 14, lineHeight: 1.5 }}>
+                    {currentBeat.description}
+                  </p>
+                )}
+                {currentBeat && (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 8 }}>
+                    {(currentBeat.mood || []).map((mood) => (
+                      <span
+                        key={`mood-${mood}`}
+                        style={{
+                          padding: '4px 10px',
+                          borderRadius: 999,
+                          border: '1px solid rgba(255,255,255,0.2)',
+                          background: 'rgba(255,255,255,0.06)',
+                          fontSize: 12,
+                          color: 'var(--text)',
+                        }}
+                      >
+                        {formatMetaLabel(mood)}
+                      </span>
+                    ))}
+                    {(currentBeat.tags || []).map((tag) => (
+                      <span
+                        key={`tag-${tag}`}
+                        style={{
+                          padding: '4px 10px',
+                          borderRadius: 999,
+                          border: '1px solid rgba(228,160,16,0.35)',
+                          background: 'rgba(228,160,16,0.12)',
+                          fontSize: 12,
+                          color: 'var(--text)',
+                        }}
+                      >
+                        #{formatMetaLabel(tag)}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 <audio
                   controls
                   preload="none"
@@ -954,7 +1348,7 @@ export default function BeatStore() {
       </section>
 
       {/* SHOWCASE */}
-      <section className="section hex">
+      <section id="showcase" className="section hex">
         <div className="container">
           <div className="kicker">Showcase</div>
           <h2 className="headline">Featured Tracks</h2>
@@ -1180,8 +1574,15 @@ export default function BeatStore() {
               <div className="price-label" style={{ fontSize: '36px', fontWeight: 'bold', marginTop: '16px' }}>
                 <span style={{textDecoration:'line-through', color:'var(--muted)', fontWeight:700, marginRight:8}}>$701</span>
                 <span style={{ background: 'var(--accent)', color: '#111', fontWeight: 900, padding: '2px 8px', borderRadius: '999px', fontSize: 14 }}>Launch Sale 33% OFF</span>
-                <div style={{marginTop:8}}>Price: $469</div>
+                <div style={{marginTop:8, textDecoration:'line-through', color:'var(--muted)', fontSize: '28px'}}>Price: $469</div>
+                <div style={{marginTop:4, color:'#ff5a5a', fontSize: '30px', fontWeight: 900}}>VIP50 Price: $234.50</div>
+                <div style={{ marginTop: 4, display: 'inline-block', background: 'rgba(255,90,90,0.16)', color: '#ff8f8f', border: '1px solid rgba(255,90,90,0.35)', fontWeight: 800, padding: '2px 8px', borderRadius: 999, fontSize: 12 }}>
+                  Use code VIP50
+                </div>
               </div>
+              <p className="subtle" style={{ marginTop: 12, color: 'var(--muted)' }}>
+                If at any point during the collaboration it becomes clear that the project is not a good creative fit, the project may be respectfully declined and a full refund issued for any work not yet delivered.
+              </p>
             </div>
             <form className="custom-form-wrapper" style={{ background: '#141416', padding: '24px', borderRadius: '16px', border: '1px solid var(--line)' }}>
               <h4 style={{ marginTop: 0, marginBottom: '16px' }}>Send Your Inquiry</h4>
@@ -1215,6 +1616,268 @@ export default function BeatStore() {
           <small>&copy; Honeycomb Lab {currentYear}</small>
         </div>
       </footer>
+
+      {miniCollapsed ? (
+        <button
+          type="button"
+          onClick={() => setMiniCollapsed(false)}
+          aria-label="Open mini MP3 player"
+          style={{
+            position: 'fixed',
+            left: 14,
+            top: '50%',
+            transform: 'translateY(-50%)',
+            zIndex: 140,
+            width: 44,
+            height: 44,
+            borderRadius: 10,
+            border: '1px solid rgba(192,192,192,0.7)',
+            background: 'linear-gradient(180deg, rgba(28,30,35,0.44), rgba(18,20,24,0.36))',
+            backdropFilter: 'blur(14px) saturate(130%)',
+            WebkitBackdropFilter: 'blur(14px) saturate(130%)',
+            boxShadow: '0 8px 20px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.24)',
+            color: '#d7d7d7',
+            display: 'grid',
+            placeItems: 'center',
+            padding: 0,
+          }}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="4" y="4" width="16" height="16" rx="3" fill="currentColor" opacity="0.25" />
+            <path d="M10 8L17 12L10 16V8Z" fill="currentColor" />
+          </svg>
+        </button>
+      ) : (
+        <div
+          aria-label="Mini beat player"
+          ref={miniPlayerRef}
+          onPointerDown={startMiniDrag}
+          style={{
+            position: 'fixed',
+            right: miniDesktop ? 'auto' : 16,
+            left: miniDesktop ? miniPosition.x : 'auto',
+            top: miniDesktop ? miniPosition.y : 'auto',
+            bottom: miniDesktop ? 'auto' : 16,
+            zIndex: 140,
+            width: miniDesktop ? 214 : 'min(214px, calc(100vw - 20px))',
+            borderRadius: 14,
+            border: '1px solid rgba(192,192,192,0.8)',
+            background: 'linear-gradient(180deg, rgba(27,29,34,0.58) 0%, rgba(18,19,24,0.52) 52%, rgba(26,28,33,0.56) 100%)',
+            boxShadow: '0 18px 44px rgba(0,0,0,0.62), 0 6px 14px rgba(0,0,0,0.35), inset 0 1px 0 rgba(192,192,192,0.42), inset 0 -1px 0 rgba(192,192,192,0.16)',
+            backdropFilter: 'blur(16px) saturate(135%)',
+            WebkitBackdropFilter: 'blur(16px) saturate(135%)',
+            padding: 8,
+            opacity: currentBeat ? 0.93 : 0.58,
+            transform: currentBeat ? 'translateY(0)' : 'translateY(2px)',
+            transition: 'opacity .25s ease, transform .25s ease',
+            cursor: miniDesktop && miniDragRef.current.active ? 'grabbing' : (miniDesktop ? 'grab' : 'default'),
+          }}
+        >
+          <div
+            style={{
+              position: 'relative',
+              borderRadius: 10,
+              border: '1px solid #8a8f95',
+              background: 'linear-gradient(180deg, rgba(17,18,22,0.74), rgba(24,26,31,0.64))',
+              boxShadow: 'inset 0 1px 0 rgba(192,192,192,0.25)',
+              padding: 10,
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => setMiniCollapsed(true)}
+              aria-label="Close mini player"
+              style={{
+                position: 'absolute',
+                top: 6,
+                right: 6,
+                width: 18,
+                height: 18,
+                borderRadius: 999,
+                border: '1px solid rgba(192,192,192,0.7)',
+                background: 'rgba(0,0,0,0.24)',
+                color: '#d9d9d9',
+                fontSize: 10,
+                lineHeight: 1,
+                padding: 0,
+                display: 'grid',
+                placeItems: 'center',
+              }}
+            >
+              x
+            </button>
+            <div style={{ display: 'grid', gridTemplateColumns: '50px 1fr', gap: 10, alignItems: 'center' }}>
+              <button
+                type="button"
+                onClick={jumpToMainPlayer}
+                aria-label="Open main player"
+                style={{ width: 44, height: 44, borderRadius: 8, overflow: 'hidden', border: '1px solid #c0c0c0', background: '#0f1012', padding: 0 }}
+              >
+                {currentBeat?.artwork ? (
+                  <img src={currentBeat.artwork} alt="" aria-hidden="true" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                ) : null}
+              </button>
+              <div style={{ minWidth: 0 }}>
+                <button
+                  type="button"
+                  onClick={jumpToMainPlayer}
+                  style={{ fontSize: 9, letterSpacing: 1.2, textTransform: 'uppercase', color: '#9a9fa5', background: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}
+                >
+                  MP3 Player
+                </button>
+                <div style={{ fontSize: 13, fontWeight: 800, color: '#f2f2f2', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {currentBeat?.title || 'Select a beat'}
+                </div>
+                <div style={{ fontSize: 11, color: '#b9bec4', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', marginTop: 2 }}>
+                  {currentBeat?.key || 'Key N/A'} • {currentBeat?.bpm ? `${currentBeat.bpm} BPM` : 'BPM N/A'}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '34px 1fr 34px', gap: 6, alignItems: 'center', marginTop: 8 }}>
+            <small style={{ color: '#d6d6d6', fontVariantNumeric: 'tabular-nums' }}>{formatTime(miniCurrentTime)}</small>
+            <input
+              type="range"
+              min={0}
+              max={miniDuration > 0 ? miniDuration : 0}
+              step="0.1"
+              value={Math.min(miniCurrentTime, miniDuration || 0)}
+              onChange={(e) => handleMiniSeek(e.target.value)}
+              onInput={(e) => handleMiniSeek(e.target.value)}
+              disabled={!currentBeat?.preview || miniDuration <= 0}
+              style={{ width: '100%', accentColor: '#c0c0c0' }}
+            />
+            <small style={{ color: '#d6d6d6', textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{formatTime(miniDuration)}</small>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6, alignItems: 'center', marginTop: 8 }}>
+            <button
+              type="button"
+              onClick={playPreviousBeat}
+              disabled={!miniQueue.length}
+              aria-label="Previous beat"
+              style={{ height: 30, borderRadius: 8, border: '1px solid #979ca2', background: '#16181c', color: '#d9dde2', display: 'grid', placeItems: 'center', padding: 0 }}
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                <rect x="2" y="2" width="2" height="12" fill="currentColor" />
+                <path d="M13 2L5 8L13 14V2Z" fill="currentColor" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={toggleMiniPlayback}
+              disabled={!currentBeat?.preview}
+              aria-label={miniPlaying ? 'Pause' : 'Play'}
+              style={{
+                height: 32,
+                borderRadius: 9,
+                border: '1px solid #b0b0b0',
+                background: 'linear-gradient(180deg, #d5d5d5, #b5b5b5)',
+                color: '#111',
+                display: 'grid',
+                placeItems: 'center',
+                padding: 0,
+                opacity: currentBeat?.preview ? 1 : 0.6,
+              }}
+            >
+              {miniPlaying ? (
+                <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+                  <rect x="2" y="1.5" width="3.5" height="11" fill="currentColor" />
+                  <rect x="8.5" y="1.5" width="3.5" height="11" fill="currentColor" />
+                </svg>
+              ) : (
+                <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+                  <path d="M3 2L12 7L3 12V2Z" fill="currentColor" />
+                </svg>
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={playNextBeat}
+              disabled={!miniQueue.length}
+              aria-label="Next beat"
+              style={{ height: 30, borderRadius: 8, border: '1px solid #979ca2', background: '#16181c', color: '#d9dde2', display: 'grid', placeItems: 'center', padding: 0 }}
+            >
+              <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M3 2L11 8L3 14V2Z" fill="currentColor" />
+                <rect x="12" y="2" width="2" height="12" fill="currentColor" />
+              </svg>
+            </button>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'auto auto auto 1fr', gap: 6, alignItems: 'center', marginTop: 6 }}>
+            <button
+              type="button"
+              onClick={shuffleBeat}
+              disabled={!miniQueue.length}
+              aria-label="Shuffle"
+              style={{ width: 30, height: 26, borderRadius: 7, border: '1px solid #8d8d8d', background: '#17191d', color: '#c0c0c0', display: 'grid', placeItems: 'center', padding: 0 }}
+            >
+              <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M2 4H5L7 7L9 9L11 12H14" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M12 10L14 12L12 14" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M2 12H5L7 9" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M12 2L14 4L12 6" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                <path d="M9 7L11 4H14" stroke="currentColor" strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={toggleMiniLoop}
+              disabled={!currentBeat?.preview}
+              aria-label="Loop"
+              style={{
+                width: 30,
+                height: 26,
+                borderRadius: 7,
+                border: miniLoop ? '1px solid #c0c0c0' : '1px solid #8d8d8d',
+                background: miniLoop ? 'rgba(192,192,192,0.18)' : '#17191d',
+                color: '#c0c0c0',
+                display: 'grid',
+                placeItems: 'center',
+                padding: 0,
+              }}
+            >
+              <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true">
+                <path d="M2.5 5.5A3.5 3.5 0 0 1 6 2h5v2l3-2-3-2v2H6A5.5 5.5 0 0 0 .5 5.5" fill="currentColor" />
+                <path d="M13.5 10.5A3.5 3.5 0 0 1 10 14H5v-2l-3 2 3 2v-2h5a5.5 5.5 0 0 0 5.5-5.5" fill="currentColor" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={toggleMiniMute}
+              disabled={!currentBeat?.preview}
+              aria-label={miniMuted ? 'Unmute' : 'Mute'}
+              style={{ width: 30, height: 26, borderRadius: 7, border: '1px solid #8d8d8d', background: '#17191d', color: '#c0c0c0', display: 'grid', placeItems: 'center', padding: 0 }}
+            >
+              {miniMuted ? (
+                <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+                  <path d="M1 5H4L7 2V12L4 9H1V5Z" fill="currentColor" />
+                  <path d="M9 5L13 9M13 5L9 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                </svg>
+              ) : (
+                <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+                  <path d="M1 5H4L7 2V12L4 9H1V5Z" fill="currentColor" />
+                  <path d="M9 5.5C9.8 6.3 9.8 7.7 9 8.5M10.8 4C12.3 5.6 12.3 8.4 10.8 10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" fill="none" />
+                </svg>
+              )}
+            </button>
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value={miniMuted ? 0 : miniVolume}
+              onChange={(e) => handleMiniVolume(e.target.value)}
+              onInput={(e) => handleMiniVolume(e.target.value)}
+              disabled={!currentBeat?.preview}
+              aria-label="Volume"
+              style={{ width: '100%', accentColor: '#c0c0c0' }}
+            />
+          </div>
+        </div>
+      )}
 
       {showCompare && <CompareLicensesModal onClose={() => setShowCompare(false)} endsInText={endsInText} />}
     </main>

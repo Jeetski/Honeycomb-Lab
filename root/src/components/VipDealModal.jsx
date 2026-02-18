@@ -42,7 +42,11 @@ export default function VipDealModal() {
           &times;
         </button>
         <div className="vip-body">
-          <h2 id="vip-title" className="vip-headline">Hive VIP Deal: 50% OFF Diamond & Custom Beats</h2>
+          <h2 id="vip-title" className="vip-headline">
+            Hive VIP Deal:
+            <br />
+            50% OFF Diamond &amp; Custom Beats
+          </h2>
           <div className="vip-code-row" aria-live="polite">
             <div className="vip-code" title="Discount code">VIP50</div>
             <button type="button" className="vip-copy" onClick={copyCode}>

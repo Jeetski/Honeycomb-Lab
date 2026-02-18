@@ -5,8 +5,22 @@
 .vip-body{padding:22px 22px 26px;text-align:center}
 .vip-headline{margin:6px 0 14px;font-size:26px;line-height:1.25;font-weight:900;letter-spacing:.3px}
 .vip-code-row{display:flex;align-items:center;gap:10px;background:#0f0f0f;border:1px dashed var(--line);border-radius:12px;padding:0 12px;margin:8px auto 16px;height:56px;width:100%;max-width:420px}
-.vip-code{font-weight:900;font-size:36px;letter-spacing:2px;background:linear-gradient(90deg,#b76e79,#e4a010,#00b5e2);-webkit-background-clip:text;background-clip:text;color:transparent}
-.vip-code{flex:1;text-align:center;line-height:1}
+.vip-code{
+  flex:1;
+  text-align:center;
+  line-height:1;
+  font-weight:900;
+  font-size:36px;
+  letter-spacing:2px;
+  background:linear-gradient(110deg,#00b5e2 0%, #b76e79 50%, #c0c0c0 100%);
+  background-size:220% 220%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  filter:drop-shadow(0 0 0 rgba(192,192,192,0));
+  animation:vip-code-flow 14s ease-in-out infinite, vip-code-breathe 5.8s ease-in-out infinite;
+  will-change:background-position, filter, transform;
+}
 .vip-copy{background:#272727;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:0 14px;cursor:pointer;height:40px;display:inline-flex;align-items:center;justify-content:center}
 .vip-copy:hover{filter:brightness(.98)}
 .vip-redeem{display:inline-flex;align-items:center;justify-content:center;margin-top:8px;background:var(--accent);color:#111;font-weight:900;border:1px solid #000;border-radius:12px;height:56px;padding:0 18px;text-decoration:none;width:100%;max-width:420px}
@@ -17,10 +31,21 @@
 
 @keyframes vip-fade-in{from{opacity:0}to{opacity:1}}
 @keyframes vip-pop-in{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes vip-code-flow{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+@keyframes vip-code-breathe{
+  0%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(192,192,192,0))}
+  50%{transform:scale(1.02);filter:drop-shadow(0 0 10px rgba(192,192,192,0.22))}
+  100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(192,192,192,0))}
+}
 
 @media (prefers-reduced-motion: reduce){
   .vip-backdrop,.vip-modal{animation:none}
   .vip-hourglass{animation:none}
+  .vip-code{animation:none}
 }
 
 /* Mobile responsiveness without affecting desktop */
