@@ -1,4 +1,4 @@
-Honeycomb Lab — gh-pages Source
+Honeycomb Lab - gh-pages Source
 
 Place your Vite React project files here (package.json, vite.config.js, src/, public/).
 This branch is built by GitHub Actions and deployed to GitHub Pages.

@@ -154,6 +154,101 @@ const SECTION_ALIASES = {
   shop: 'merch',
 };
 
+const MERCH_ITEMS = [
+  {
+    id: 'tee-white',
+    title: "Originals White • I'M NOT A RAPPER. | Honeycomb Lab Premium Tee",
+    defaultSize: 'M',
+    priceBySize: {
+      XS: 37.0,
+      S: 37.0,
+      M: 37.0,
+      L: 37.0,
+      XL: 37.0,
+      '2XL': 37.0,
+      '3XL': 38.5,
+      '4XL': 40.5,
+      '5XL': 46.0,
+    },
+    color: 'White',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', '5XL'],
+    sizeLabel: 'Sizes: XS-5XL',
+    primaryImage: '/merch/tees/i%27m_not_a_rapper/white_front_back.png',
+    secondaryImage: '/merch/tees/i%27m_not_a_rapper/white_front.png',
+    shortLabel: 'White Tee',
+  },
+  {
+    id: 'tee-black',
+    title: "Originals Black • I'M NOT A RAPPER. | Honeycomb Lab Premium Tee",
+    defaultSize: 'M',
+    priceBySize: {
+      XS: 37.0,
+      S: 37.0,
+      M: 37.0,
+      L: 37.0,
+      XL: 37.0,
+      '2XL': 37.0,
+      '3XL': 38.5,
+      '4XL': 40.5,
+      '5XL': 46.0,
+    },
+    color: 'Black',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL', '5XL'],
+    sizeLabel: 'Sizes: XS-5XL',
+    primaryImage: '/merch/tees/i%27m_not_a_rapper/black_front_back.png',
+    secondaryImage: '/merch/tees/i%27m_not_a_rapper/black_front.png',
+    shortLabel: 'Black Tee',
+  },
+  {
+    id: 'snapback-black-originals',
+    title: 'Originals Black | Honeycomb Lab Premium Snapback',
+    priceEuro: 31.5,
+    color: 'Black',
+    sizes: ['One size'],
+    defaultSize: 'One size',
+    sizeLabel: 'Size: One size',
+    primaryImage: '/merch/snapbacks/black_originals/front.png',
+    secondaryImage: '/merch/snapbacks/black_originals/model.png',
+    shortLabel: 'Snapback',
+  },
+  {
+    id: 'bandana-black-originals',
+    title: 'Originals Black | Honeycomb Lab Premium Bandana',
+    priceEuro: 26.0,
+    color: 'Black',
+    sizes: ['S', 'M', 'L'],
+    defaultSize: 'M',
+    sizeLabel: 'Sizes: S-M-L',
+    primaryImage: '/merch/bandanas/black/folded-close-up.png',
+    secondaryImage: '/merch/bandanas/black/model.png',
+    shortLabel: 'Bandana',
+  },
+  {
+    id: 'bandana-pattern-originals',
+    title: 'Originals Pattern | Honeycomb Lab Premium Bandana',
+    priceEuro: 26.0,
+    color: 'Pattern',
+    sizes: ['S', 'M', 'L'],
+    defaultSize: 'M',
+    sizeLabel: 'Sizes: S-M-L',
+    primaryImage: '/merch/bandanas/pattern/folded-close-up.png',
+    secondaryImage: '/merch/bandanas/pattern/model.png',
+    shortLabel: 'Pattern Bandana',
+  },
+  {
+    id: 'corduroy-hat-black-originals',
+    title: 'Originals Black | Honeycomb Lab Premium Corduroy Hat',
+    priceEuro: 33.5,
+    color: 'Black',
+    sizes: ['One size'],
+    defaultSize: 'One size',
+    sizeLabel: 'Size: One size',
+    primaryImage: '/merch/corduroy hats/black/front.png',
+    secondaryImage: '/merch/corduroy hats/black/model.png',
+    shortLabel: 'Corduroy Hat',
+  },
+];
+
 const normalizeHashToken = (value) => String(value || '')
   .toLowerCase()
   .replace(/^#/, '')
@@ -671,19 +766,49 @@ export default function BeatStore() {
     }
   };
 
-  const [merchPreorder, setMerchPreorder] = useState({
-    white: { size: 'M', name: '', contact: '' },
-    black: { size: 'M', name: '', contact: '' },
-  });
+  const [merchPreorder, setMerchPreorder] = useState(() => (
+    MERCH_ITEMS.reduce((acc, item) => {
+      acc[item.id] = { size: item.defaultSize || item.sizes[0] || 'One size', name: '', contact: '' };
+      return acc;
+    }, {})
+  ));
+  const [activeMerchIndex, setActiveMerchIndex] = useState(0);
+  const [showAltMerchImage, setShowAltMerchImage] = useState(false);
+  const [merchAutoScrollPaused, setMerchAutoScrollPaused] = useState(false);
+  const activeMerch = MERCH_ITEMS[activeMerchIndex] || MERCH_ITEMS[0];
+  const pauseMerchAutoScroll = () => setMerchAutoScrollPaused(true);
 
-  const updateMerchPreorder = (variant, field, value) => {
+  useEffect(() => {
+    setShowAltMerchImage(false);
+  }, [activeMerchIndex]);
+
+  useEffect(() => {
+    if (merchAutoScrollPaused) return undefined;
+    if (MERCH_ITEMS.length < 2) return undefined;
+    const id = setInterval(() => {
+      setActiveMerchIndex((prev) => (prev + 1) % MERCH_ITEMS.length);
+    }, 5000);
+    return () => clearInterval(id);
+  }, [merchAutoScrollPaused]);
+
+  const updateMerchPreorder = (merchId, field, value) => {
     setMerchPreorder((prev) => ({
       ...prev,
-      [variant]: {
-        ...prev[variant],
+      [merchId]: {
+        ...prev[merchId],
         [field]: value,
       },
     }));
+  };
+
+  const getMerchPriceText = (merch, size) => {
+    if (merch?.priceBySize) {
+      const fallbackSize = merch.defaultSize || merch.sizes?.[0];
+      const amount = merch.priceBySize[size] ?? merch.priceBySize[fallbackSize];
+      if (Number.isFinite(amount)) return `EUR ${amount.toFixed(2)} (Free Worldwide Shipping)`;
+    }
+    if (Number.isFinite(merch?.priceEuro)) return `EUR ${merch.priceEuro.toFixed(2)} (Free Worldwide Shipping)`;
+    return String(merch?.price || '');
   };
 
   const openEmailWithFallback = (mailtoUrl, gmailUrl, failureMessage) => {
@@ -706,11 +831,14 @@ export default function BeatStore() {
     }, 900);
   };
 
-  const startMerchPreorder = (variant) => {
-    const product = "I'M NOT A RAPPER. | Honeycomb Lab Premium Tee";
-    const color = variant === 'white' ? 'White' : 'Black';
-    const details = merchPreorder[variant] || {};
-    const size = details.size || 'M';
+  const startMerchPreorder = (merchId) => {
+    const merch = MERCH_ITEMS.find((item) => item.id === merchId);
+    if (!merch) return;
+    const details = merchPreorder[merchId] || {};
+    const product = merch.title;
+    const color = merch.color;
+    const size = details.size || merch.defaultSize || merch.sizes[0] || 'One size';
+    const selectedPrice = getMerchPriceText(merch, size);
     const name = String(details.name || '').trim();
     const contact = String(details.contact || '').trim();
 
@@ -730,12 +858,13 @@ export default function BeatStore() {
         `Product: ${product}`,
         `Color: ${color}`,
         `Size: ${size}`,
+        `Price: ${selectedPrice}`,
         `Name: ${name}`,
         `Preferred Contact: ${contact || 'N/A'}`,
         'Quantity: 1',
-        'Launch Collection: Yes',
+        'Collection: Honeycomb Lab Originals: Launch Series',
         'Shipping starts: May 1, 2026',
-        'Secret gift: Included',
+        'Originals Series extra: Included',
         '',
         'Please send me payment details and any expected delivery timeline.',
         '',
@@ -1293,7 +1422,7 @@ export default function BeatStore() {
           <h2 className="headline">Join the Hive</h2>
           <div className="underline" />
           <p className="subtle" style={{maxWidth:760,margin:"0 auto 18px",textAlign:'center'}}>
-            Join our email list and get access to special deals, exclusive content & free tools—including the new "Honey" Multi-FX Synthesizer (patcher preset) for FLStudio—plus the Beginner's Starter Pack - From Zero to Hero.
+            Join our email list and get access to special deals, exclusive content & free tools, including the new "Honey" Multi-FX Synthesizer (patcher preset) for FLStudio, plus the Beginner's Starter Pack - From Zero to Hero.
           </p>
           <div className="subtle" style={{maxWidth:700,margin:'0 auto 22px',textAlign:'center'}}>
             <strong>Starter Pack includes:</strong>
@@ -1529,36 +1658,34 @@ export default function BeatStore() {
       <section id="merch" className="section hex">
         <div className="container">
           <div className="kicker">Merch</div>
-          <h2 className="headline">Launch Collection</h2>
+          <h2 className="headline">Honeycomb Lab Originals: Launch Series</h2>
           <div className="underline" />
-          <p className="lead" style={{ marginTop: 10 }}>
-            Order now. Shipping starts May 1, 2026. Includes a secret gift. Subject to limited quantities.
-          </p>
-          <div
-            className="merch-grid"
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-              gap: '16px',
-              marginTop: '16px',
-            }}
-          >
+          <div className="lead" style={{ marginTop: 10 }}>
+            <p style={{ margin: 0 }}>Limited to 10 pieces per item.</p>
+            <p style={{ margin: '6px 0 0' }}>Once sold out, this design will never be reprinted.</p>
+            <p style={{ margin: '6px 0 0' }}>Produced exclusively for the Originals Series.</p>
+            <p style={{ margin: '6px 0 0' }}>Each Originals Series order includes a small, unreleased extra.</p>
+            <p style={{ margin: '6px 0 0' }}>Known only to those who were there at the beginning.</p>
+          </div>
+          <div className="merch-grid" style={{ marginTop: '16px' }}>
             <article
               style={{
                 background: '#141416',
                 border: '1px solid var(--line)',
                 borderRadius: '12px',
                 padding: '16px',
+                maxWidth: 720,
+                margin: '0 auto',
               }}
             >
               <div style={{ position: 'relative', marginBottom: '12px' }}>
                 <img
-                  src="/merch/tees/i%27m_not_a_rapper/white_front_back.png"
-                  alt="I'M NOT A RAPPER. | Honeycomb Lab White Premium Tee"
+                  src={showAltMerchImage && activeMerch.secondaryImage ? activeMerch.secondaryImage : activeMerch.primaryImage}
+                  alt={activeMerch.title}
                   style={{ width: '100%', display: 'block', borderRadius: '8px', background: '#0f1012' }}
                   loading="lazy"
-                  onMouseEnter={(e) => { e.currentTarget.src = '/merch/tees/i%27m_not_a_rapper/white_front.png' }}
-                  onMouseLeave={(e) => { e.currentTarget.src = '/merch/tees/i%27m_not_a_rapper/white_front_back.png' }}
+                  onMouseEnter={() => setShowAltMerchImage(true)}
+                  onMouseLeave={() => setShowAltMerchImage(false)}
                 />
                 <span
                   aria-label="Launch collection"
@@ -1577,139 +1704,106 @@ export default function BeatStore() {
                   }}
                 >LAUNCH</span>
               </div>
-              <h3 style={{ margin: '0 0 6px', fontSize: '18px' }}>I'M NOT A RAPPER. | Honeycomb Lab White Premium Tee</h3>
-              <p className="subtle" style={{ margin: 0, color: 'var(--muted)' }}>$38-$50 (Free Worldwide Shipping)</p>
-              <p className="subtle" style={{ margin: '4px 0 0', color: 'var(--muted)' }}>Sizes: XS-5XL</p>
+              <h3 style={{ margin: '0 0 6px', fontSize: '18px' }}>{activeMerch.title}</h3>
+              <p className="subtle" style={{ margin: 0, color: 'var(--muted)' }}>
+                {getMerchPriceText(activeMerch, merchPreorder[activeMerch.id]?.size || activeMerch.defaultSize || activeMerch.sizes[0])}
+              </p>
+              <p className="subtle" style={{ margin: '4px 0 0', color: 'var(--muted)' }}>Color: {activeMerch.color}</p>
+              <p className="subtle" style={{ margin: '4px 0 0', color: 'var(--muted)' }}>{activeMerch.sizeLabel}</p>
               <div style={{ display: 'grid', gap: 8, marginTop: 8 }}>
-                <label htmlFor="preorder-name-white" className="subtle" style={{ color: 'var(--muted)' }}>Name:</label>
+                <label htmlFor={`preorder-name-${activeMerch.id}`} className="subtle" style={{ color: 'var(--muted)' }}>Name:</label>
                 <input
-                  id="preorder-name-white"
+                  id={`preorder-name-${activeMerch.id}`}
                   type="text"
-                  value={merchPreorder.white.name}
-                  onChange={(e) => updateMerchPreorder('white', 'name', e.target.value)}
-                  placeholder="Your name *"
-                  style={{ background:'#0f1012', color:'var(--text)', border:'1px solid var(--line)', borderRadius:'8px', padding:'8px 10px' }}
-                />
-                <label htmlFor="preorder-contact-white" className="subtle" style={{ color: 'var(--muted)' }}>Email / IG / Phone (optional):</label>
-                <input
-                  id="preorder-contact-white"
-                  type="text"
-                  value={merchPreorder.white.contact}
-                  onChange={(e) => updateMerchPreorder('white', 'contact', e.target.value)}
-                  placeholder="How should we contact you?"
-                  style={{ background:'#0f1012', color:'var(--text)', border:'1px solid var(--line)', borderRadius:'8px', padding:'8px 10px' }}
-                />
-              </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginTop: 10 }}>
-                <label htmlFor="size-white" className="subtle" style={{ color: 'var(--muted)' }}>Size:</label>
-                <select
-                  id="size-white"
-                  value={merchPreorder.white.size}
-                  onChange={(e) => updateMerchPreorder('white', 'size', e.target.value)}
-                  style={{ background:'#0f1012', color:'var(--text)', border:'1px solid var(--line)', borderRadius:'8px', padding:'6px 8px' }}
-                >
-                  <option>XS</option>
-                  <option>S</option>
-                  <option>M</option>
-                  <option>L</option>
-                  <option>XL</option>
-                  <option>2XL</option>
-                  <option>3XL</option>
-                  <option>4XL</option>
-                  <option>5XL</option>
-                </select>
-                <button
-                  type="button"
-                  className="cta secondary"
-                  onClick={() => startMerchPreorder('white')}
-                  title="Reserve yours"
-                >Reserve yours</button>
-              </div>
-            </article>
-
-            <article
-              style={{
-                background: '#141416',
-                border: '1px solid var(--line)',
-                borderRadius: '12px',
-                padding: '16px',
-              }}
-            >
-              <div style={{ position: 'relative', marginBottom: '12px' }}>
-                <img
-                  src="/merch/tees/i%27m_not_a_rapper/black_front_back.png"
-                  alt="I'M NOT A RAPPER. | Honeycomb Lab Black Premium Tee"
-                  style={{ width: '100%', display: 'block', borderRadius: '8px', background: '#0f1012' }}
-                  loading="lazy"
-                  onMouseEnter={(e) => { e.currentTarget.src = '/merch/tees/i%27m_not_a_rapper/black_front.png' }}
-                  onMouseLeave={(e) => { e.currentTarget.src = '/merch/tees/i%27m_not_a_rapper/black_front_back.png' }}
-                />
-                <span
-                  aria-label="Launch collection"
-                  style={{
-                    position: 'absolute',
-                    top: 8,
-                    left: 8,
-                    background: 'linear-gradient(135deg, #8a2a2a, #c0392b)',
-                    color: '#fff',
-                    fontWeight: 900,
-                    fontSize: 12,
-                    padding: '6px 10px',
-                    borderRadius: 8,
-                    border: '1px solid rgba(0,0,0,0.4)',
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.25)'
+                  value={merchPreorder[activeMerch.id]?.name || ''}
+                  onChange={(e) => {
+                    pauseMerchAutoScroll();
+                    updateMerchPreorder(activeMerch.id, 'name', e.target.value);
                   }}
-                >LAUNCH</span>
-              </div>
-              <h3 style={{ margin: '0 0 6px', fontSize: '18px' }}>I'M NOT A RAPPER. | Honeycomb Lab Black Premium Tee</h3>
-              <p className="subtle" style={{ margin: 0, color: 'var(--muted)' }}>$38-$50 (Free Worldwide Shipping)</p>
-              <p className="subtle" style={{ margin: '4px 0 0', color: 'var(--muted)' }}>Sizes: XS-5XL</p>
-              <div style={{ display: 'grid', gap: 8, marginTop: 8 }}>
-                <label htmlFor="preorder-name-black" className="subtle" style={{ color: 'var(--muted)' }}>Name:</label>
-                <input
-                  id="preorder-name-black"
-                  type="text"
-                  value={merchPreorder.black.name}
-                  onChange={(e) => updateMerchPreorder('black', 'name', e.target.value)}
                   placeholder="Your name *"
                   style={{ background:'#0f1012', color:'var(--text)', border:'1px solid var(--line)', borderRadius:'8px', padding:'8px 10px' }}
                 />
-                <label htmlFor="preorder-contact-black" className="subtle" style={{ color: 'var(--muted)' }}>Email / IG / Phone (optional):</label>
+                <label htmlFor={`preorder-contact-${activeMerch.id}`} className="subtle" style={{ color: 'var(--muted)' }}>Email / IG / Phone (optional):</label>
                 <input
-                  id="preorder-contact-black"
+                  id={`preorder-contact-${activeMerch.id}`}
                   type="text"
-                  value={merchPreorder.black.contact}
-                  onChange={(e) => updateMerchPreorder('black', 'contact', e.target.value)}
+                  value={merchPreorder[activeMerch.id]?.contact || ''}
+                  onChange={(e) => {
+                    pauseMerchAutoScroll();
+                    updateMerchPreorder(activeMerch.id, 'contact', e.target.value);
+                  }}
                   placeholder="How should we contact you?"
                   style={{ background:'#0f1012', color:'var(--text)', border:'1px solid var(--line)', borderRadius:'8px', padding:'8px 10px' }}
                 />
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginTop: 10 }}>
-                <label htmlFor="size-black" className="subtle" style={{ color: 'var(--muted)' }}>Size:</label>
+                <label htmlFor={`size-${activeMerch.id}`} className="subtle" style={{ color: 'var(--muted)' }}>Size:</label>
                 <select
-                  id="size-black"
-                  value={merchPreorder.black.size}
-                  onChange={(e) => updateMerchPreorder('black', 'size', e.target.value)}
+                  id={`size-${activeMerch.id}`}
+                  value={merchPreorder[activeMerch.id]?.size || activeMerch.defaultSize || activeMerch.sizes[0]}
+                  onChange={(e) => {
+                    pauseMerchAutoScroll();
+                    updateMerchPreorder(activeMerch.id, 'size', e.target.value);
+                  }}
                   style={{ background:'#0f1012', color:'var(--text)', border:'1px solid var(--line)', borderRadius:'8px', padding:'6px 8px' }}
                 >
-                  <option>XS</option>
-                  <option>S</option>
-                  <option>M</option>
-                  <option>L</option>
-                  <option>XL</option>
-                  <option>2XL</option>
-                  <option>3XL</option>
-                  <option>4XL</option>
-                  <option>5XL</option>
+                  {activeMerch.sizes.map((sizeOption) => (
+                    <option key={`${activeMerch.id}-${sizeOption}`}>{sizeOption}</option>
+                  ))}
                 </select>
                 <button
                   type="button"
                   className="cta secondary"
-                  onClick={() => startMerchPreorder('black')}
+                  onClick={() => {
+                    pauseMerchAutoScroll();
+                    startMerchPreorder(activeMerch.id);
+                  }}
                   title="Reserve yours"
                 >Reserve yours</button>
               </div>
             </article>
+            <div style={{ maxWidth: 720, margin: '12px auto 0' }}>
+              <input
+                type="range"
+                min={0}
+                max={Math.max(0, MERCH_ITEMS.length - 1)}
+                value={activeMerchIndex}
+                onChange={(e) => {
+                  pauseMerchAutoScroll();
+                  setActiveMerchIndex(Number(e.target.value) || 0);
+                }}
+                aria-label="Merch slider"
+                style={{ width: '100%' }}
+              />
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 8, justifyContent: 'center' }}>
+                {MERCH_ITEMS.map((item, idx) => {
+                  const isActive = idx === activeMerchIndex;
+                  return (
+                    <button
+                      key={item.id}
+                      type="button"
+                      onClick={() => {
+                        pauseMerchAutoScroll();
+                        setActiveMerchIndex(idx);
+                      }}
+                      style={{
+                        border: isActive ? '1px solid var(--accent)' : '1px solid var(--line)',
+                        color: isActive ? 'var(--accent)' : 'var(--text)',
+                        background: isActive ? 'rgba(228,160,16,0.12)' : 'transparent',
+                        padding: '6px 10px',
+                        borderRadius: 8,
+                        fontWeight: 700,
+                      }}
+                    >
+                      {item.shortLabel}
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="subtle" style={{ margin: '8px 0 0', textAlign: 'center', color: 'var(--muted)' }}>
+                {merchAutoScrollPaused ? 'Auto-scroll paused.' : 'Auto-scrolls every 5 seconds.'}
+              </p>
+            </div>
           </div>
         </div>
       </section>
