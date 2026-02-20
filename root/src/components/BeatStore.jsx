@@ -686,42 +686,7 @@ export default function BeatStore() {
     }));
   };
 
-  const startMerchPreorder = (variant) => {
-    const product = "I'M NOT A RAPPER. | Honeycomb Lab Premium Tee";
-    const color = variant === 'white' ? 'White' : 'Black';
-    const details = merchPreorder[variant] || {};
-    const size = details.size || 'M';
-    const name = String(details.name || '').trim();
-    const contact = String(details.contact || '').trim();
-
-    if (!name) {
-      window.alert('Please enter your name before sending a preorder request.');
-      return;
-    }
-
-    const preorderEmail = 'merch@honeycomblab.art';
-    const preorderSubject = encodeURIComponent(`PREORDER - ${product} (${color}, ${size})`);
-    const preorderBody = encodeURIComponent(
-      [
-        'Hi Honeycomb Lab,',
-        '',
-        "I'd like to place a preorder for the merch item below:",
-        '',
-        `Product: ${product}`,
-        `Color: ${color}`,
-        `Size: ${size}`,
-        `Name: ${name}`,
-        `Preferred Contact: ${contact || 'N/A'}`,
-        'Quantity: 1',
-        '',
-        'Please send me payment details and any expected delivery timeline.',
-        '',
-        'Thank you!',
-      ].join('\n')
-    );
-    const preorderMailto = `mailto:${preorderEmail}?subject=${preorderSubject}&body=${preorderBody}`;
-    const gmailPreorder = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(preorderEmail)}&su=${preorderSubject}&body=${preorderBody}`;
-
+  const openEmailWithFallback = (mailtoUrl, gmailUrl, failureMessage) => {
     // Fallback chain for browsers/devices that do not reliably handle mailto:
     // 1) attempt native mail app via mailto
     // 2) if page never loses visibility, open Gmail compose in a new tab
@@ -731,16 +696,106 @@ export default function BeatStore() {
     };
     document.addEventListener('visibilitychange', onVisibility, { once: true });
 
-    window.location.assign(preorderMailto);
+    window.location.assign(mailtoUrl);
 
     window.setTimeout(() => {
       document.removeEventListener('visibilitychange', onVisibility);
       if (handoffDetected) return;
-      const popup = window.open(gmailPreorder, '_blank', 'noopener,noreferrer');
-      if (!popup) {
-        window.alert('Could not open your email app automatically. Please allow popups or email merch@honeycomblab.art with your preorder details.');
-      }
+      const popup = window.open(gmailUrl, '_blank', 'noopener,noreferrer');
+      if (!popup) window.alert(failureMessage);
     }, 900);
+  };
+
+  const startMerchPreorder = (variant) => {
+    const product = "I'M NOT A RAPPER. | Honeycomb Lab Premium Tee";
+    const color = variant === 'white' ? 'White' : 'Black';
+    const details = merchPreorder[variant] || {};
+    const size = details.size || 'M';
+    const name = String(details.name || '').trim();
+    const contact = String(details.contact || '').trim();
+
+    if (!name) {
+      window.alert('Please enter your name before sending your order request.');
+      return;
+    }
+
+    const preorderEmail = 'merch@honeycomblab.art';
+    const preorderSubject = encodeURIComponent(`ORDER NOW - ${product} (${color}, ${size})`);
+    const preorderBody = encodeURIComponent(
+      [
+        'Hi Honeycomb Lab,',
+        '',
+        "I'd like to place an order for the merch item below:",
+        '',
+        `Product: ${product}`,
+        `Color: ${color}`,
+        `Size: ${size}`,
+        `Name: ${name}`,
+        `Preferred Contact: ${contact || 'N/A'}`,
+        'Quantity: 1',
+        'Launch Collection: Yes',
+        'Shipping starts: May 1, 2026',
+        'Secret gift: Included',
+        '',
+        'Please send me payment details and any expected delivery timeline.',
+        '',
+        'Thank you!',
+      ].join('\n')
+    );
+    const preorderMailto = `mailto:${preorderEmail}?subject=${preorderSubject}&body=${preorderBody}`;
+    const gmailPreorder = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(preorderEmail)}&su=${preorderSubject}&body=${preorderBody}`;
+    openEmailWithFallback(
+      preorderMailto,
+      gmailPreorder,
+      'Could not open your email app automatically. Please allow popups or email merch@honeycomblab.art with your order details.',
+    );
+  };
+
+  const submitCustomInquiry = (e) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const firstName = String(formData.get('firstName') || '').trim();
+    const emailAddress = String(formData.get('email') || '').trim();
+    const genre = String(formData.get('genre') || '').trim();
+    const mood = String(formData.get('mood') || '').trim();
+    const tempo = String(formData.get('tempo') || '').trim();
+    const key = String(formData.get('key') || '').trim();
+    const referenceTrack = String(formData.get('referenceTrack') || '').trim();
+    const promoCode = String(formData.get('promoCode') || '').trim();
+    const additionalInfo = String(formData.get('additionalInfo') || '').trim();
+
+    const inquiryEmail = 'contact@honeycomblab.art';
+    const inquirySubject = encodeURIComponent(`CUSTOM BEAT INQUIRY - ${firstName || 'New Request'}`);
+    const inquiryBody = encodeURIComponent(
+      [
+        'Hi Honeycomb Lab,',
+        '',
+        "I'd like to inquire about a custom beat:",
+        '',
+        `First name: ${firstName || 'N/A'}`,
+        `Email: ${emailAddress || 'N/A'}`,
+        `Genre: ${genre || 'N/A'}`,
+        `Mood: ${mood || 'N/A'}`,
+        `Tempo: ${tempo || 'N/A'}`,
+        `Key: ${key || 'N/A'}`,
+        `Reference Track: ${referenceTrack || 'N/A'}`,
+        `Promo code: ${promoCode || 'N/A'}`,
+        '',
+        'Additional information:',
+        additionalInfo || 'N/A',
+        '',
+        'Thank you!',
+      ].join('\n')
+    );
+    const inquiryMailto = `mailto:${inquiryEmail}?subject=${inquirySubject}&body=${inquiryBody}`;
+    const gmailInquiry = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(inquiryEmail)}&su=${inquirySubject}&body=${inquiryBody}`;
+
+    openEmailWithFallback(
+      inquiryMailto,
+      gmailInquiry,
+      'Could not open your email app automatically. Please allow popups or email contact@honeycomblab.art with your custom beat inquiry details.',
+    );
   };
 
   return (
@@ -1474,8 +1529,11 @@ export default function BeatStore() {
       <section id="merch" className="section hex">
         <div className="container">
           <div className="kicker">Merch</div>
-          <h2 className="headline">Fresh Honeycomb Merch</h2>
+          <h2 className="headline">Launch Collection</h2>
           <div className="underline" />
+          <p className="lead" style={{ marginTop: 10 }}>
+            Order now. Shipping starts May 1, 2026. Includes a secret gift. Subject to limited quantities.
+          </p>
           <div
             className="merch-grid"
             style={{
@@ -1503,7 +1561,7 @@ export default function BeatStore() {
                   onMouseLeave={(e) => { e.currentTarget.src = '/merch/tees/i%27m_not_a_rapper/white_front_back.png' }}
                 />
                 <span
-                  aria-label="Preorder"
+                  aria-label="Launch collection"
                   style={{
                     position: 'absolute',
                     top: 8,
@@ -1517,7 +1575,7 @@ export default function BeatStore() {
                     border: '1px solid rgba(0,0,0,0.4)',
                     boxShadow: '0 4px 12px rgba(0,0,0,0.25)'
                   }}
-                >PREORDER</span>
+                >LAUNCH</span>
               </div>
               <h3 style={{ margin: '0 0 6px', fontSize: '18px' }}>I'M NOT A RAPPER. | Honeycomb Lab White Premium Tee</h3>
               <p className="subtle" style={{ margin: 0, color: 'var(--muted)' }}>$38-$50 (Free Worldwide Shipping)</p>
@@ -1564,8 +1622,8 @@ export default function BeatStore() {
                   type="button"
                   className="cta secondary"
                   onClick={() => startMerchPreorder('white')}
-                  title="Start preorder"
-                >Preorder</button>
+                  title="Reserve yours"
+                >Reserve yours</button>
               </div>
             </article>
 
@@ -1587,7 +1645,7 @@ export default function BeatStore() {
                   onMouseLeave={(e) => { e.currentTarget.src = '/merch/tees/i%27m_not_a_rapper/black_front_back.png' }}
                 />
                 <span
-                  aria-label="Preorder"
+                  aria-label="Launch collection"
                   style={{
                     position: 'absolute',
                     top: 8,
@@ -1601,7 +1659,7 @@ export default function BeatStore() {
                     border: '1px solid rgba(0,0,0,0.4)',
                     boxShadow: '0 4px 12px rgba(0,0,0,0.25)'
                   }}
-                >PREORDER</span>
+                >LAUNCH</span>
               </div>
               <h3 style={{ margin: '0 0 6px', fontSize: '18px' }}>I'M NOT A RAPPER. | Honeycomb Lab Black Premium Tee</h3>
               <p className="subtle" style={{ margin: 0, color: 'var(--muted)' }}>$38-$50 (Free Worldwide Shipping)</p>
@@ -1648,8 +1706,8 @@ export default function BeatStore() {
                   type="button"
                   className="cta secondary"
                   onClick={() => startMerchPreorder('black')}
-                  title="Start preorder"
-                >Preorder</button>
+                  title="Reserve yours"
+                >Reserve yours</button>
               </div>
             </article>
           </div>
@@ -1703,25 +1761,25 @@ export default function BeatStore() {
                 If at any point during the collaboration it becomes clear that the project is not a good creative fit, the project may be respectfully declined and a full refund issued for any work not yet delivered.
               </p>
             </div>
-            <form className="custom-form-wrapper" style={{ background: '#141416', padding: '24px', borderRadius: '16px', border: '1px solid var(--line)' }}>
+            <form className="custom-form-wrapper" onSubmit={submitCustomInquiry} style={{ background: '#141416', padding: '24px', borderRadius: '16px', border: '1px solid var(--line)' }}>
               <h4 style={{ marginTop: 0, marginBottom: '16px' }}>Send Your Inquiry</h4>
               <div className="grid grid-2">
-                <input type="text" placeholder="First name *" required />
-                <input type="email" placeholder="Email *" required />
+                <input type="text" name="firstName" placeholder="First name *" required />
+                <input type="email" name="email" placeholder="Email *" required />
               </div>
               <div className="grid grid-2" style={{marginTop:12}}>
-                <input type="text" placeholder="Genre" />
-                <input type="text" placeholder="Mood *" required />
+                <input type="text" name="genre" placeholder="Genre" />
+                <input type="text" name="mood" placeholder="Mood *" required />
               </div>
               <div className="grid grid-2" style={{marginTop:12}}>
-                <input type="text" placeholder="Tempo *" required />
-                <input type="text" placeholder="Key" />
+                <input type="text" name="tempo" placeholder="Tempo *" required />
+                <input type="text" name="key" placeholder="Key" />
               </div>
               <div className="grid grid-2" style={{marginTop:12}}>
-                <input type="text" placeholder="Reference Track" />
-                <input type="text" placeholder="Promo code (optional)" />
+                <input type="text" name="referenceTrack" placeholder="Reference Track" />
+                <input type="text" name="promoCode" placeholder="Promo code (optional)" />
               </div>
-              <textarea style={{marginTop:12,minHeight:'120px'}} rows={6} placeholder="Additional information" />
+              <textarea name="additionalInfo" style={{marginTop:12,minHeight:'120px'}} rows={6} placeholder="Additional information" />
               <button style={{marginTop:14}} type="submit">Submit Inquiry</button>
             </form>
           </div>
