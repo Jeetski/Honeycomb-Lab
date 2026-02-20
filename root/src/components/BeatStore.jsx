@@ -670,6 +670,79 @@ export default function BeatStore() {
       setShowCompare(true);
     }
   };
+
+  const [merchPreorder, setMerchPreorder] = useState({
+    white: { size: 'M', name: '', contact: '' },
+    black: { size: 'M', name: '', contact: '' },
+  });
+
+  const updateMerchPreorder = (variant, field, value) => {
+    setMerchPreorder((prev) => ({
+      ...prev,
+      [variant]: {
+        ...prev[variant],
+        [field]: value,
+      },
+    }));
+  };
+
+  const startMerchPreorder = (variant) => {
+    const product = "I'M NOT A RAPPER. | Honeycomb Lab Premium Tee";
+    const color = variant === 'white' ? 'White' : 'Black';
+    const details = merchPreorder[variant] || {};
+    const size = details.size || 'M';
+    const name = String(details.name || '').trim();
+    const contact = String(details.contact || '').trim();
+
+    if (!name) {
+      window.alert('Please enter your name before sending a preorder request.');
+      return;
+    }
+
+    const preorderEmail = 'merch@honeycomblab.art';
+    const preorderSubject = encodeURIComponent(`PREORDER - ${product} (${color}, ${size})`);
+    const preorderBody = encodeURIComponent(
+      [
+        'Hi Honeycomb Lab,',
+        '',
+        "I'd like to place a preorder for the merch item below:",
+        '',
+        `Product: ${product}`,
+        `Color: ${color}`,
+        `Size: ${size}`,
+        `Name: ${name}`,
+        `Preferred Contact: ${contact || 'N/A'}`,
+        'Quantity: 1',
+        '',
+        'Please send me payment details and any expected delivery timeline.',
+        '',
+        'Thank you!',
+      ].join('\n')
+    );
+    const preorderMailto = `mailto:${preorderEmail}?subject=${preorderSubject}&body=${preorderBody}`;
+    const gmailPreorder = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(preorderEmail)}&su=${preorderSubject}&body=${preorderBody}`;
+
+    // Fallback chain for browsers/devices that do not reliably handle mailto:
+    // 1) attempt native mail app via mailto
+    // 2) if page never loses visibility, open Gmail compose in a new tab
+    let handoffDetected = false;
+    const onVisibility = () => {
+      if (document.visibilityState === 'hidden') handoffDetected = true;
+    };
+    document.addEventListener('visibilitychange', onVisibility, { once: true });
+
+    window.location.assign(preorderMailto);
+
+    window.setTimeout(() => {
+      document.removeEventListener('visibilitychange', onVisibility);
+      if (handoffDetected) return;
+      const popup = window.open(gmailPreorder, '_blank', 'noopener,noreferrer');
+      if (!popup) {
+        window.alert('Could not open your email app automatically. Please allow popups or email merch@honeycomblab.art with your preorder details.');
+      }
+    }, 900);
+  };
+
   return (
     <main className="page">
       {/* SOCIAL MEDIA PANEL */}
@@ -1430,7 +1503,7 @@ export default function BeatStore() {
                   onMouseLeave={(e) => { e.currentTarget.src = '/merch/tees/i%27m_not_a_rapper/white_front_back.png' }}
                 />
                 <span
-                  aria-label="Out of stock"
+                  aria-label="Preorder"
                   style={{
                     position: 'absolute',
                     top: 8,
@@ -1444,14 +1517,39 @@ export default function BeatStore() {
                     border: '1px solid rgba(0,0,0,0.4)',
                     boxShadow: '0 4px 12px rgba(0,0,0,0.25)'
                   }}
-                >OUT OF STOCK</span>
+                >PREORDER</span>
               </div>
               <h3 style={{ margin: '0 0 6px', fontSize: '18px' }}>I'M NOT A RAPPER. | Honeycomb Lab White Premium Tee</h3>
               <p className="subtle" style={{ margin: 0, color: 'var(--muted)' }}>$38-$50 (Free Worldwide Shipping)</p>
               <p className="subtle" style={{ margin: '4px 0 0', color: 'var(--muted)' }}>Sizes: XS-5XL</p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginTop: 8 }}>
+              <div style={{ display: 'grid', gap: 8, marginTop: 8 }}>
+                <label htmlFor="preorder-name-white" className="subtle" style={{ color: 'var(--muted)' }}>Name:</label>
+                <input
+                  id="preorder-name-white"
+                  type="text"
+                  value={merchPreorder.white.name}
+                  onChange={(e) => updateMerchPreorder('white', 'name', e.target.value)}
+                  placeholder="Your name *"
+                  style={{ background:'#0f1012', color:'var(--text)', border:'1px solid var(--line)', borderRadius:'8px', padding:'8px 10px' }}
+                />
+                <label htmlFor="preorder-contact-white" className="subtle" style={{ color: 'var(--muted)' }}>Email / IG / Phone (optional):</label>
+                <input
+                  id="preorder-contact-white"
+                  type="text"
+                  value={merchPreorder.white.contact}
+                  onChange={(e) => updateMerchPreorder('white', 'contact', e.target.value)}
+                  placeholder="How should we contact you?"
+                  style={{ background:'#0f1012', color:'var(--text)', border:'1px solid var(--line)', borderRadius:'8px', padding:'8px 10px' }}
+                />
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginTop: 10 }}>
                 <label htmlFor="size-white" className="subtle" style={{ color: 'var(--muted)' }}>Size:</label>
-                <select id="size-white" defaultValue="M" disabled aria-disabled="true" style={{ background:'#0f1012', color:'var(--text)', opacity: .6, cursor:'not-allowed', border:'1px solid var(--line)', borderRadius:'8px', padding:'6px 8px' }}>
+                <select
+                  id="size-white"
+                  value={merchPreorder.white.size}
+                  onChange={(e) => updateMerchPreorder('white', 'size', e.target.value)}
+                  style={{ background:'#0f1012', color:'var(--text)', border:'1px solid var(--line)', borderRadius:'8px', padding:'6px 8px' }}
+                >
                   <option>XS</option>
                   <option>S</option>
                   <option>M</option>
@@ -1465,11 +1563,9 @@ export default function BeatStore() {
                 <button
                   type="button"
                   className="cta secondary"
-                  disabled
-                  aria-disabled="true"
-                  title="Out of stock"
-                  style={{ cursor:'not-allowed', opacity:.7 }}
-                >Out of Stock</button>
+                  onClick={() => startMerchPreorder('white')}
+                  title="Start preorder"
+                >Preorder</button>
               </div>
             </article>
 
@@ -1491,7 +1587,7 @@ export default function BeatStore() {
                   onMouseLeave={(e) => { e.currentTarget.src = '/merch/tees/i%27m_not_a_rapper/black_front_back.png' }}
                 />
                 <span
-                  aria-label="Out of stock"
+                  aria-label="Preorder"
                   style={{
                     position: 'absolute',
                     top: 8,
@@ -1505,14 +1601,39 @@ export default function BeatStore() {
                     border: '1px solid rgba(0,0,0,0.4)',
                     boxShadow: '0 4px 12px rgba(0,0,0,0.25)'
                   }}
-                >OUT OF STOCK</span>
+                >PREORDER</span>
               </div>
               <h3 style={{ margin: '0 0 6px', fontSize: '18px' }}>I'M NOT A RAPPER. | Honeycomb Lab Black Premium Tee</h3>
               <p className="subtle" style={{ margin: 0, color: 'var(--muted)' }}>$38-$50 (Free Worldwide Shipping)</p>
               <p className="subtle" style={{ margin: '4px 0 0', color: 'var(--muted)' }}>Sizes: XS-5XL</p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginTop: 8 }}>
+              <div style={{ display: 'grid', gap: 8, marginTop: 8 }}>
+                <label htmlFor="preorder-name-black" className="subtle" style={{ color: 'var(--muted)' }}>Name:</label>
+                <input
+                  id="preorder-name-black"
+                  type="text"
+                  value={merchPreorder.black.name}
+                  onChange={(e) => updateMerchPreorder('black', 'name', e.target.value)}
+                  placeholder="Your name *"
+                  style={{ background:'#0f1012', color:'var(--text)', border:'1px solid var(--line)', borderRadius:'8px', padding:'8px 10px' }}
+                />
+                <label htmlFor="preorder-contact-black" className="subtle" style={{ color: 'var(--muted)' }}>Email / IG / Phone (optional):</label>
+                <input
+                  id="preorder-contact-black"
+                  type="text"
+                  value={merchPreorder.black.contact}
+                  onChange={(e) => updateMerchPreorder('black', 'contact', e.target.value)}
+                  placeholder="How should we contact you?"
+                  style={{ background:'#0f1012', color:'var(--text)', border:'1px solid var(--line)', borderRadius:'8px', padding:'8px 10px' }}
+                />
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center', marginTop: 10 }}>
                 <label htmlFor="size-black" className="subtle" style={{ color: 'var(--muted)' }}>Size:</label>
-                <select id="size-black" defaultValue="M" disabled aria-disabled="true" style={{ background:'#0f1012', color:'var(--text)', opacity:.6, cursor:'not-allowed', border:'1px solid var(--line)', borderRadius:'8px', padding:'6px 8px' }}>
+                <select
+                  id="size-black"
+                  value={merchPreorder.black.size}
+                  onChange={(e) => updateMerchPreorder('black', 'size', e.target.value)}
+                  style={{ background:'#0f1012', color:'var(--text)', border:'1px solid var(--line)', borderRadius:'8px', padding:'6px 8px' }}
+                >
                   <option>XS</option>
                   <option>S</option>
                   <option>M</option>
@@ -1526,11 +1647,9 @@ export default function BeatStore() {
                 <button
                   type="button"
                   className="cta secondary"
-                  disabled
-                  aria-disabled="true"
-                  title="Out of stock"
-                  style={{ cursor:'not-allowed', opacity:.7 }}
-                >Out of Stock</button>
+                  onClick={() => startMerchPreorder('black')}
+                  title="Start preorder"
+                >Preorder</button>
               </div>
             </article>
           </div>
