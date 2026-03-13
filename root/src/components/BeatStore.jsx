@@ -256,6 +256,7 @@ const normalizeHashToken = (value) => String(value || '')
   .replace(/^-+|-+$/g, '');
 
 export default function BeatStore() {
+  const LAUNCH_SALE_END_AT = new Date('2026-05-01T23:59:59');
   const currentYear = new Date().getFullYear();
   const showcaseVideos = [
     {
@@ -267,7 +268,6 @@ export default function BeatStore() {
       title: 'Ky Steezy - STZYWRLD [Official Audio]',
     },
   ];
-  const [showWelcome, setShowWelcome] = useState(false);
   const [currentBeat, setCurrentBeat] = useState(null);
   const [requestedBeatId, setRequestedBeatId] = useState(null);
   const audioRef = useRef(null);
@@ -378,20 +378,9 @@ export default function BeatStore() {
     beatByTokenRef.current = map;
   }
 
-  const handleSubscribe = (e) => {
-    e.preventDefault();
-    setShowWelcome(true);
-  };
   // Launch sale countdown timer
   const [nowTs, setNowTs] = useState(() => Date.now());
-  // Deadline: 2 months from initial page load
-  const launchDeadlineRef = useRef(null);
-  if (!launchDeadlineRef.current) {
-    const d = new Date();
-    d.setMonth(d.getMonth() + 2);
-    launchDeadlineRef.current = d.getTime();
-  }
-  const launchDeadlineTs = launchDeadlineRef.current;
+  const launchDeadlineTs = LAUNCH_SALE_END_AT.getTime();
   const msLeft = Math.max(0, launchDeadlineTs - nowTs);
   const dayMs = 24 * 60 * 60 * 1000;
   const hourMs = 60 * 60 * 1000;
@@ -1402,7 +1391,7 @@ export default function BeatStore() {
           <div className="underline" />
           <div className="team-wrap">
             <div className="team-photo">
-              <img src="/David.jpg" alt="David Cody" />
+                  <img src="/David.png" alt="David Cody" />
             </div>
             <div className="team-text">
               <p>Music as sonic experimentation: trap, drill, and hip-hop with psychoacoustic techniques baked in.</p>

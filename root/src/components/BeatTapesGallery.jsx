@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import tapes from '../data/beat_tapes.json';
 
 export default function BeatTapesGallery() {

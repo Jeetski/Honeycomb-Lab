@@ -58,7 +58,7 @@ export default function VipDealModal() {
             <svg className="vip-hourglass" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
               <path d="M6 2h12v2c0 2.8-2 5.2-5 6 3 .8 5 3.2 5 6v2H6v-2c0-2.8 2-5.2 5-6-3-.8-5-3.2-5-6V2zM8 20h8v-1c0-2.2-1.8-4-4-4s-4 1.8-4 4v1zM16 4H8v1c0 2.2 1.8 4 4 4s4-1.8 4-4V4z"/>
             </svg>
-            <span>Valid for the next 24 hours only</span>
+            <span>Capped to first 100 customers only</span>
           </div>
         </div>
       </div>
