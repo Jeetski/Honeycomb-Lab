@@ -921,36 +921,99 @@ export default function BeatStore() {
       {/* SOCIAL MEDIA PANEL */}
       <div className="social-panel">
         <a
-          href="https://www.youtube.com/@honeycomblabmusic"
+          href="/spotify"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="social-link"
+          title="Spotify"
+          aria-label="Spotify"
+        >
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0Zm5.5 17.34a.75.75 0 0 1-1.03.25c-2.82-1.72-6.38-2.11-10.6-1.17a.75.75 0 1 1-.33-1.46c4.62-1.05 8.57-.6 11.71 1.31a.75.75 0 0 1 .25 1.03Zm1.47-3.27a.94.94 0 0 1-1.29.31c-3.22-1.98-8.12-2.56-11.93-1.42a.94.94 0 1 1-.54-1.8c4.35-1.31 9.75-.67 13.45 1.59.44.27.58.85.31 1.29Zm.13-3.41C15.23 8.37 8.84 8.17 5.25 9.26a1.12 1.12 0 1 1-.65-2.15c4.12-1.25 10.98-1 15.67 1.78a1.12 1.12 0 0 1-1.17 1.77Z"/>
+          </svg>
+        </a>
+        <a
+          href="/youtube"
           target="_blank"
           rel="noopener noreferrer"
           className="social-link"
           title="YouTube"
+          aria-label="YouTube"
         >
           <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
             <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
           </svg>
         </a>
         <a
-          href="https://www.instagram.com/honeycomblabmusic"
+          href="/instagram"
           target="_blank"
           rel="noopener noreferrer"
           className="social-link"
           title="Instagram"
+          aria-label="Instagram"
         >
           <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
           </svg>
         </a>
         <a
-          href="https://www.tiktok.com/@honeycomblabmusic"
+          href="/tiktok"
           target="_blank"
           rel="noopener noreferrer"
           className="social-link"
           title="TikTok"
+          aria-label="TikTok"
         >
           <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
             <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+          </svg>
+        </a>
+        <a
+          href="/soundcloud"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="social-link"
+          title="SoundCloud"
+          aria-label="SoundCloud"
+        >
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17.53 10.11a4.71 4.71 0 0 0-1.1.13 5.45 5.45 0 0 0-10.65 1.57v6.2h11.98a3.95 3.95 0 1 0-.23-7.9Zm-8.58 7.9H7.82v-5.7h1.13Zm2.1 0H9.92v-6.17h1.13Zm2.1 0h-1.13v-5.63h1.13Zm2.11 0h-1.14v-6.1h1.14Zm2.1 0h-1.13V11.2h1.13Zm2.1 0h-1.13v-4.2h1.13Z"/>
+          </svg>
+        </a>
+        <a
+          href="/buymeacoffee"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="social-link"
+          title="Buy Me a Coffee"
+          aria-label="Buy Me a Coffee"
+        >
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M18 8h1a3 3 0 0 1 0 6h-1a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8h15Zm1 2h-1v2h1a1 1 0 0 0 0-2ZM5 6h11a1 1 0 0 0 0-2H5a1 1 0 1 0 0 2Z"/>
+          </svg>
+        </a>
+        <a
+          href="/patreon"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="social-link"
+          title="Patreon"
+          aria-label="Patreon"
+        >
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M14 3a7 7 0 1 1 0 14 7 7 0 0 1 0-14ZM3 4h4v16H3V4Z"/>
+          </svg>
+        </a>
+        <a
+          href="/discord"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="social-link"
+          title="Discord"
+          aria-label="Discord"
+        >
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M20.32 4.37A16.9 16.9 0 0 0 16.2 3l-.2.4a15.4 15.4 0 0 1 3.72 1.43 12.4 12.4 0 0 0-3.58-1.1 13.43 13.43 0 0 0-8.28 0 12.4 12.4 0 0 0-3.58 1.1A15.4 15.4 0 0 1 8 3.4L7.8 3a16.9 16.9 0 0 0-4.12 1.37C1.08 8.25.39 12.02.73 15.74A16.6 16.6 0 0 0 5.78 18l1.08-1.48c-.6-.22-1.17-.5-1.72-.84.14.1.29.2.44.3a11.67 11.67 0 0 0 9.84 0c.15-.1.3-.2.44-.3-.55.34-1.12.62-1.72.84L15.22 18a16.6 16.6 0 0 0 5.05-2.26c.4-4.3-.69-8.03-1.95-11.37ZM9.56 13.7c-.96 0-1.75-.88-1.75-1.96s.77-1.96 1.75-1.96c.99 0 1.77.88 1.75 1.96 0 1.08-.77 1.96-1.75 1.96Zm4.88 0c-.96 0-1.75-.88-1.75-1.96s.77-1.96 1.75-1.96c.99 0 1.77.88 1.75 1.96 0 1.08-.76 1.96-1.75 1.96Z"/>
           </svg>
         </a>
       </div>
