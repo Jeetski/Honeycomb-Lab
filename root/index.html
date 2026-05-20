@@ -28,8 +28,36 @@
     <script>
       (function () {
         var path = window.location.pathname.replace(/\/+$/, '')
-        if (path === '/tools') window.location.replace('/tools/')
-        if (path === '/spotify') window.location.replace('/spotify/')
+        var redirectPaths = {
+          '/tools': '/tools/',
+          '/spotify': '/spotify/',
+          '/youtube': '/youtube/',
+          '/instagram': '/instagram/',
+          '/tiktok': '/tiktok/',
+          '/soundcloud': '/soundcloud/',
+          '/buymeacoffee': '/buymeacoffee/',
+          '/patreon': '/patreon/',
+          '/discord': '/discord/',
+        }
+        if (redirectPaths[path]) {
+          window.location.replace(redirectPaths[path])
+          return
+        }
+
+        var hash = window.location.hash.replace(/^#/, '').toLowerCase()
+        var redirectHashes = {
+          youtube: '/youtube/',
+          spotify: '/spotify/',
+          instagram: '/instagram/',
+          tiktok: '/tiktok/',
+          soundcloud: '/soundcloud/',
+          buymeacoffee: '/buymeacoffee/',
+          patreon: '/patreon/',
+          discord: '/discord/',
+        }
+        if ((path === '' || path === '/') && redirectHashes[hash]) {
+          window.location.replace(redirectHashes[hash])
+        }
       })();
     </script>
 
