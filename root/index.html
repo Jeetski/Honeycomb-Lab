@@ -44,6 +44,36 @@
           return
         }
 
+        var beatTokens = {
+          'merked': true,
+          'merked-1': true,
+          'kunoichi': true,
+          'kunoichi-1': true,
+          'malice': true,
+          'malice-1': true,
+          'red-leather': true,
+          'red-leather-1': true,
+          'aqua': true,
+          'aqua-1': true,
+          'gold': true,
+          'gold-1': true,
+          'feels': true,
+          'feels-1': true,
+          'digital-strings': true,
+          'digital-strings-1': true,
+          'beatitude': true,
+          'beatitude-1': true,
+          'quixotic': true,
+          'quixotic-1': true,
+          'ambivalence': true,
+          'ambivalence-1': true,
+        }
+        var pathToken = path.replace(/^\//, '').toLowerCase()
+        if (beatTokens[pathToken]) {
+          window.location.replace('/#' + pathToken)
+          return
+        }
+
         var hash = window.location.hash.replace(/^#/, '').toLowerCase()
         var redirectHashes = {
           youtube: '/youtube/',
