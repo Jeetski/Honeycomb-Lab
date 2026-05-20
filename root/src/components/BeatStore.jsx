@@ -409,7 +409,7 @@ export default function BeatStore() {
     return () => clearInterval(id);
   }, []);
   // Build a robust mailto link with proper URL encoding
-  const email = 'contact@honeycomblab.art';
+  const email = 'contact@honeycomblab.org';
   const subject = encodeURIComponent('Contact - Honeycomb Lab');
   const body = encodeURIComponent('Hi Honeycomb Lab,\n\n');
   const mailto = `mailto:${email}?subject=${subject}&body=${body}`;
@@ -836,7 +836,7 @@ export default function BeatStore() {
       return;
     }
 
-    const preorderEmail = 'merch@honeycomblab.art';
+    const preorderEmail = 'merch@honeycomblab.org';
     const preorderSubject = encodeURIComponent(`ORDER NOW - ${product} (${color}, ${size})`);
     const preorderBody = encodeURIComponent(
       [
@@ -865,7 +865,7 @@ export default function BeatStore() {
     openEmailWithFallback(
       preorderMailto,
       gmailPreorder,
-      'Could not open your email app automatically. Please allow popups or email merch@honeycomblab.art with your order details.',
+      'Could not open your email app automatically. Please allow popups or email merch@honeycomblab.org with your order details.',
     );
   };
 
@@ -883,7 +883,7 @@ export default function BeatStore() {
     const promoCode = String(formData.get('promoCode') || '').trim();
     const additionalInfo = String(formData.get('additionalInfo') || '').trim();
 
-    const inquiryEmail = 'contact@honeycomblab.art';
+    const inquiryEmail = 'contact@honeycomblab.org';
     const inquirySubject = encodeURIComponent(`CUSTOM BEAT INQUIRY - ${firstName || 'New Request'}`);
     const inquiryBody = encodeURIComponent(
       [
@@ -912,7 +912,7 @@ export default function BeatStore() {
     openEmailWithFallback(
       inquiryMailto,
       gmailInquiry,
-      'Could not open your email app automatically. Please allow popups or email contact@honeycomblab.art with your custom beat inquiry details.',
+      'Could not open your email app automatically. Please allow popups or email contact@honeycomblab.org with your custom beat inquiry details.',
     );
   };
 
@@ -1935,7 +1935,7 @@ export default function BeatStore() {
       {/* FOOTER */}
       <footer className="footer">
         <div className="container">
-          <a href="https://honeycomblab.art" rel="noopener noreferrer">honeycomblab.art</a>
+          <a href="https://honeycomblab.org" rel="noopener noreferrer">honeycomblab.org</a>
           <small>&copy; Honeycomb Lab {currentYear}</small>
         </div>
       </footer>
