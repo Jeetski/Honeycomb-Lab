@@ -5,20 +5,22 @@ import beatsData from '../data/beats.json';
 function CompareLicensesModal({ onClose, endsInText }) {
   const sharedText = 'All licenses are non-exclusive unless stated otherwise. All licenses include a 50/50 songwriting split. Artist owns the final song master. Producer and artist share songwriting credit equally.';
   const iconStyle = { width: 36, height: 36, objectFit: 'contain', display: 'block' };
+  const previewStyle = { width: '100%', aspectRatio: '1 / 1', objectFit: 'cover', borderRadius: 14, marginBottom: 14, border: '1px solid var(--line)', display: 'block' };
   return (
     <div className="cmp-backdrop" onClick={onClose}>
       <div className="cmp-modal" onClick={(e) => e.stopPropagation()}>
         <div className="cmp-head">
           <h3>Compare Licenses</h3>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, lineHeight: 1 }}>
             <img src="/ribbon.png" alt="" aria-hidden="true" className="cmp-ribbon" />
-            <span style={{ background: 'var(--accent)', color: '#111', fontWeight: 900, padding: '4px 8px', borderRadius: '999px', fontSize: '12px' }} aria-label="Summer sale 33 percent off">33% OFF</span>
-            {endsInText && <small aria-live="polite" style={{ color: 'var(--muted)' }}>{endsInText}</small>}
+            <span style={{ background: 'var(--accent)', color: '#111', fontWeight: 900, padding: '2px 6px', borderRadius: '999px', fontSize: '10px' }} aria-label="Summer sale 33 percent off">33% OFF</span>
+            {endsInText && <small aria-live="polite" style={{ color: 'var(--muted)', fontSize: '11px' }}>{endsInText}</small>}
           </div>
-          <button type="button" className="cmp-close" onClick={onClose}>&times;</button>
+          <button type="button" className="cmp-close" onClick={onClose} style={{ padding: '4px 8px', lineHeight: 1 }}>&times;</button>
         </div>
         <div className="cmp-body" style={{ gridTemplateColumns: '1fr 1fr 1fr', alignItems: 'stretch' }}>
           <div className="cmp-col" style={{ borderTop: '3px solid #C0C0C0' }}>
+            <img src="/tiny.jpg" alt="Silver license preview" style={previewStyle} />
             <h4 style={{ color: '#C0C0C0', display: 'flex', alignItems: 'center', gap: 8 }}>
               <img src="/licenses/Silver_No_Background.png" alt="" aria-hidden="true" style={iconStyle} />
               Silver
@@ -47,6 +49,7 @@ function CompareLicensesModal({ onClose, endsInText }) {
             </ul>
           </div>
           <div className="cmp-col" style={{ borderTop: '3px solid #b76e79' }}>
+            <img src="/average.jpg" alt="Rose Gold license preview" style={previewStyle} />
             <h4 style={{ color: '#b76e79', display: 'flex', alignItems: 'center', gap: 8 }}>
               <img src="/licenses/Rose-Gold_No_Background.png" alt="" aria-hidden="true" style={iconStyle} />
               Rose Gold
@@ -75,6 +78,7 @@ function CompareLicensesModal({ onClose, endsInText }) {
             </ul>
           </div>
           <div className="cmp-col" style={{ borderTop: '3px solid #00b5e2' }}>
+            <img src="/XXXL.jpg" alt="Diamond license preview" style={previewStyle} />
             <h4 style={{ color: '#00b5e2', display: 'flex', alignItems: 'center', gap: 8 }}>
               <img src="/licenses/Diamond_No_Background.png" alt="" aria-hidden="true" style={iconStyle} />
               Diamond
@@ -1159,10 +1163,10 @@ export default function BeatStore() {
         .btn-diamond:hover{filter:brightness(.92)}
 
         /* Compare Licenses modal */
-        .cmp-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:200}
-        .cmp-modal{background:#151515;border:1px solid var(--line);border-radius:14px;max-width:860px;width:92%;box-shadow:0 20px 60px rgba(0,0,0,.5)}
-        .cmp-head{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid var(--line)}
-        .cmp-body{padding:16px 18px;display:grid;gap:14px}
+        .cmp-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.82);display:flex;align-items:stretch;justify-content:stretch;z-index:200}
+        .cmp-modal{background:#151515;border:1px solid var(--line);border-radius:0;width:100vw;height:100dvh;max-width:none;max-height:none;box-shadow:0 20px 60px rgba(0,0,0,.5);display:flex;flex-direction:column;overflow:hidden}
+        .cmp-head{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#151515;z-index:1}
+        .cmp-body{padding:16px 18px;display:grid;gap:14px;overflow-y:auto;flex:1}
         .cmp-col{background:#111;border:1px solid var(--line);border-radius:12px;padding:12px}
         .cmp-col h4{margin:0 0 6px}
         .cmp-close{background:#272727;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:8px 10px;cursor:pointer}
@@ -1219,10 +1223,13 @@ export default function BeatStore() {
         .about-logo img{width:280px;height:auto;display:block}
 
         /* TEAM */
-        .team-wrap{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:center;max-width:1100px;margin:0 auto}
+        .team-stack{display:grid;gap:28px;max-width:1100px;margin:0 auto}
+        .team-wrap{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:center}
         @media (max-width:960px){.team-wrap{grid-template-columns:1fr;gap:14px}}
         .team-photo{width:300px;height:300px;border-radius:50%;overflow:hidden;border:2px solid var(--line);background:#1e1e1e;justify-self:center}
         .team-photo img{width:100%;height:100%;object-fit:cover;display:block}
+        .team-text h3{margin:0;font-size:28px}
+        .team-role{margin:6px 0 14px;color:var(--muted);font-weight:700;letter-spacing:.04em;text-transform:uppercase;font-size:12px}
 
         /* CUSTOM FORM */
         .custom h2{font-size:48px;letter-spacing:1px;font-weight:900;text-align:center}
@@ -1435,11 +1442,13 @@ export default function BeatStore() {
           <div className="underline" />
           <div className="about-wrap">
             <div className="about-logo">
-              <img src="/honeycomb_lab.png" alt="Honeycomb Lab logo" />
+              <img src="/huge_condom.jpg" alt="Honeycomb Lab artwork" />
             </div>
             <div className="about-text">
               <p>Honeycomb Lab is a sound design studio engineering psychoacoustic tools for consciousness. Every beat is structured with intention - embedded with frequencies, ratios, symbolism, and emotion.</p>
               <p>We don't just sell music. We sell neural architecture. This is premium audio alchemy: rooted in science, wrapped in magic, designed to move minds and realities.</p>
+              <p>When you're ready to level up your game, go bigger with your vision, dive deeper into your sound, and grind harder than everyone who said "maybe later," the Lab is built for that version of you.</p>
+              <p>Come here to sharpen the edge, raise the stakes, and make records that hit harder, feel richer, and leave a longer afterimage.</p>
               <p>Welcome to the Lab. Build what you came here to build.</p>
             </div>
           </div>
@@ -1450,18 +1459,35 @@ export default function BeatStore() {
       <section id="team" className="section hex">
         <div className="container">
           <div className="kicker">Team</div>
-          <h2 className="headline">Meet Our Producer - David Cody</h2>
+          <h2 className="headline">Meet the Team</h2>
           <div className="underline" />
-          <div className="team-wrap">
-            <div className="team-photo">
-                  <img src="/David.png" alt="David Cody" />
+          <div className="team-stack">
+            <div className="team-wrap">
+              <div className="team-photo">
+                <img src="/David.png" alt="David Cody" />
+              </div>
+              <div className="team-text">
+                <h3>David Cody</h3>
+                <p className="team-role">Founder & Lead Producer</p>
+                <p>Music as sonic experimentation: trap, drill, and hip-hop with psychoacoustic techniques baked in.</p>
+                <p>Born and based in Plovdiv, Bulgaria, David Cody treats music as sonic experimentation. He focuses on trap, drill and hip-hop, baking psychoacoustic techniques into every beat - drums that move, low end that translates, and arrangements that leave space for the story.</p>
+                <p>At 4 years old, a Tom & Jerry episode-chasing each other across a grand piano-sparked his obsession. He asked his mother to let him learn; she took him to his first piano lesson that same day. That's where his feel for melody and rhythm began, and still anchors everything he makes.</p>
+                <p>Years later, as a broke rapper, he spent nights scouring YouTube for the perfect free beats. Nothing truly matched his voice, so he learned to produce on his own. Three years in, he's building the sound he used to search for - and shaping it for other artists too.</p>
+                <p>At Honeycomb Lab, David builds mix-ready instrumentals engineered for punch and clarity, so artists spend less time fighting the beat and more time finishing music.</p>
+              </div>
             </div>
-            <div className="team-text">
-              <p>Music as sonic experimentation: trap, drill, and hip-hop with psychoacoustic techniques baked in.</p>
-              <p>Born and based in Plovdiv, Bulgaria, David Cody treats music as sonic experimentation. He focuses on trap, drill and hip-hop, baking psychoacoustic techniques into every beat - drums that move, low end that translates, and arrangements that leave space for the story.</p>
-              <p>At 4 years old, a Tom & Jerry episode-chasing each other across a grand piano-sparked his obsession. He asked his mother to let him learn; she took him to his first piano lesson that same day. That's where his feel for melody and rhythm began, and still anchors everything he makes.</p>
-              <p>Years later, as a broke rapper, he spent nights scouring YouTube for the perfect free beats. Nothing truly matched his voice, so he learned to produce on his own. Three years in, he's building the sound he used to search for - and shaping it for other artists too.</p>
-              <p>At Honeycomb Lab, David builds mix-ready instrumentals engineered for punch and clarity, so artists spend less time fighting the beat and more time finishing music.</p>
+            <div className="team-wrap">
+              <div className="team-photo">
+                <img src="/BolenZdrav.jpg" alt="BolenZdrav" />
+              </div>
+              <div className="team-text">
+                <h3>BolenZdrav</h3>
+                <p className="team-role">Producer & Visual Designer</p>
+                <p>Lucid psychedelia outside the realm of techno, shaped into rage beats, nu-metal edge, and hard bouncy drums.</p>
+                <p>Based in Plovdiv, Bulgaria, BolenZdrav brings a dark, psychedelic, atmospheric signature to the Lab. His sound pulls from rage production and new metal inspiration, balancing distorted energy with cinematic space and movement.</p>
+                <p>He builds tracks that feel vivid and aggressive at the same time: heavy bounce in the drums, tension in the textures, and a mood that lands somewhere between a fever dream and a live wire.</p>
+                <p>As Honeycomb Lab's producer and visual designer, he moves fast across both sound and image, helping shape the world around the music as much as the music itself.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -1503,7 +1529,7 @@ export default function BeatStore() {
       </section>
 
       {/* PLAYER */}
-      <section id="player" className="section">
+      <section id="player" className="section hex">
         <div className="container">
           <div className="kicker">Player</div>
           <h2 className="headline">Latest Tracks</h2>
@@ -1543,7 +1569,10 @@ export default function BeatStore() {
           </div>
 
           {/* Mini Player */}
-          <div className="card" style={{marginTop:16}}>
+          <div
+            className="card"
+            style={{ marginTop: 16, background: 'transparent', border: 'none', boxShadow: 'none', padding: 0 }}
+          >
             <div style={{display:'grid', gridTemplateColumns:'72px 1fr', gap:14, alignItems:'start'}}>
               <div className="thumb-wrap" style={{width:72, height:72, borderRadius:12, background:'#1e1e1e', overflow:'hidden', border:'1px solid var(--line)'}}>
                 {currentBeat?.artwork ? (
@@ -1907,27 +1936,34 @@ export default function BeatStore() {
                 If at any point during the collaboration it becomes clear that the project is not a good creative fit, the project may be respectfully declined and a full refund issued for any work not yet delivered.
               </p>
             </div>
-            <form className="custom-form-wrapper" onSubmit={submitCustomInquiry} style={{ background: '#141416', padding: '24px', borderRadius: '16px', border: '1px solid var(--line)' }}>
-              <h4 style={{ marginTop: 0, marginBottom: '16px' }}>Send Your Inquiry</h4>
-              <div className="grid grid-2">
-                <input type="text" name="firstName" placeholder="First name *" required />
-                <input type="email" name="email" placeholder="Email *" required />
-              </div>
-              <div className="grid grid-2" style={{marginTop:12}}>
-                <input type="text" name="genre" placeholder="Genre" />
-                <input type="text" name="mood" placeholder="Mood *" required />
-              </div>
-              <div className="grid grid-2" style={{marginTop:12}}>
-                <input type="text" name="tempo" placeholder="Tempo *" required />
-                <input type="text" name="key" placeholder="Key" />
-              </div>
-              <div className="grid grid-2" style={{marginTop:12}}>
-                <input type="text" name="referenceTrack" placeholder="Reference Track" />
-                <input type="text" name="promoCode" placeholder="Promo code (optional)" />
-              </div>
-              <textarea name="additionalInfo" style={{marginTop:12,minHeight:'120px'}} rows={6} placeholder="Additional information" />
-              <button style={{marginTop:14}} type="submit">Submit Inquiry</button>
-            </form>
+            <div style={{ display: 'grid', gap: 16 }}>
+              <img
+                src="/royal_magnum.jpg"
+                alt="Royal Magnum custom beat artwork"
+                style={{ width: '100%', display: 'block', borderRadius: '16px', border: '1px solid var(--line)', objectFit: 'cover' }}
+              />
+              <form className="custom-form-wrapper" onSubmit={submitCustomInquiry} style={{ background: '#141416', padding: '24px', borderRadius: '16px', border: '1px solid var(--line)' }}>
+                <h4 style={{ marginTop: 0, marginBottom: '16px' }}>Send Your Inquiry</h4>
+                <div className="grid grid-2">
+                  <input type="text" name="firstName" placeholder="First name *" required />
+                  <input type="email" name="email" placeholder="Email *" required />
+                </div>
+                <div className="grid grid-2" style={{marginTop:12}}>
+                  <input type="text" name="genre" placeholder="Genre" />
+                  <input type="text" name="mood" placeholder="Mood *" required />
+                </div>
+                <div className="grid grid-2" style={{marginTop:12}}>
+                  <input type="text" name="tempo" placeholder="Tempo *" required />
+                  <input type="text" name="key" placeholder="Key" />
+                </div>
+                <div className="grid grid-2" style={{marginTop:12}}>
+                  <input type="text" name="referenceTrack" placeholder="Reference Track" />
+                  <input type="text" name="promoCode" placeholder="Promo code (optional)" />
+                </div>
+                <textarea name="additionalInfo" style={{marginTop:12,minHeight:'120px'}} rows={6} placeholder="Additional information" />
+                <button style={{marginTop:14}} type="submit">Submit Inquiry</button>
+              </form>
+            </div>
           </div>
         </div>
       </section>

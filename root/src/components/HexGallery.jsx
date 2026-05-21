@@ -615,7 +615,7 @@ export default function HexGallery({ radius = 2, onSelect, audioRef, requestedBe
     <div
       ref={wrapperRef}
       aria-label="Interactive beat gallery"
-      style={{ width: '100%', height: '520px', position: 'relative', borderRadius: 16, border: '1px solid var(--line)', background: '#0e0e0f', overflow: 'hidden', contain: 'layout paint', maxWidth: '100%' }}
+      style={{ width: '100%', height: '520px', position: 'relative', borderRadius: 16, border: 'none', background: 'transparent', overflow: 'hidden', contain: 'layout paint', maxWidth: '100%' }}
     >
       <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }} />
       <div
