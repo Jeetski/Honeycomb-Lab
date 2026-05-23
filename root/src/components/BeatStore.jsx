@@ -39,11 +39,11 @@ function CompareLicensesModal({ onClose, endsInText }) {
             </div>
             <div style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 6 }}>For independent creators starting out</div>
             <ul className="cmp-list">
-              <li>High-quality WAV file</li>
-              <li>Unlimited modifications</li>
+              <li>WAV file</li>
+              <li>Unlimited use & modifications</li>
               <li>Up to 50,000 streams</li>
-              <li>Up to 5 radio stations</li>
-              <li>50/50 sync royalties (standard producer split)</li>
+              <li>Up to 5 radio plays</li>
+              <li>Standard producer sync split (50/50)</li>
               <li>Tagged</li>
               <li>Credit required: Prod. by Honeycomb Lab</li>
             </ul>
@@ -68,11 +68,11 @@ function CompareLicensesModal({ onClose, endsInText }) {
             </div>
             <div style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 6 }}>For artists ready to release commercially</div>
             <ul className="cmp-list">
-              <li>High-quality WAV file</li>
-              <li>Unlimited modifications</li>
+              <li>WAV file</li>
+              <li>Unlimited use & modifications</li>
               <li>Up to 100,000 streams</li>
-              <li>Up to 10 radio stations</li>
-              <li>Keep 100% of your song's master sync royalties</li>
+              <li>Up to 10 radio plays</li>
+              <li>Keep 100% of your masters & sync royalties</li>
               <li>Tag optional</li>
               <li>Credit required: Prod. by Honeycomb Lab</li>
             </ul>
@@ -101,12 +101,12 @@ function CompareLicensesModal({ onClose, endsInText }) {
             </div>
             <div style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 6 }}>Full creative control</div>
             <ul className="cmp-list">
-              <li>WAV file & track stems</li>
-              <li>Unlimited modifications</li>
+              <li>WAV file + track stems</li>
+              <li>Unlimited use & modifications</li>
               <li>Unlimited streams</li>
-              <li>Unlimited radio stations</li>
-              <li>Keep 100% of your song's master sync royalties</li>
-              <li>Get your song featured on our website</li>
+              <li>Unlimited radio play</li>
+              <li>Keep 100% of your masters & sync royalties</li>
+              <li>Feature placement on the Honeycomb Lab website</li>
               <li>Tag optional</li>
               <li>Credit optional</li>
             </ul>
@@ -260,7 +260,7 @@ const normalizeHashToken = (value) => String(value || '')
   .replace(/^-+|-+$/g, '');
 
 export default function BeatStore() {
-  const LAUNCH_SALE_END_AT = new Date('2026-05-01T23:59:59');
+  const LAUNCH_SALE_END_AT = new Date('2026-08-31T23:59:59');
   const currentYear = new Date().getFullYear();
   const showcaseVideos = [
     {
@@ -1262,6 +1262,27 @@ export default function BeatStore() {
         /* REVIEW STARS */
         .stars{display:inline-flex;align-items:center;color:transparent}
         .stars::before{content:"\\2605\\2605\\2605\\2605\\2605";color:var(--accent);font-size:14px;letter-spacing:2px}
+        @media (max-width:980px){
+          .nav{position:sticky;top:0;z-index:200;overflow:visible}
+          .nav .container{padding-inline:clamp(10px,3vw,20px);overflow:visible}
+          .nav-inner{height:auto;min-height:0;padding:10px 0 8px;gap:8px;flex-direction:column;align-items:stretch;justify-content:center}
+          .nav .brand{align-self:flex-start;min-width:0;font-size:clamp(.95rem,1.2vw + .7rem,1.05rem)}
+          .nav .brand-mark{width:26px;height:26px;flex:0 0 auto}
+          .nav-actions{width:100%;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:flex-start;overflow:visible;padding-bottom:2px}
+          .nav-actions::-webkit-scrollbar{display:none}
+          .nav-btn{height:34px;min-height:34px;padding:0 10px;flex:0 0 auto;white-space:nowrap;font-size:.78rem;border-radius:8px}
+          .dropdown{top:calc(100% + 8px);right:auto;left:0;max-width:min(260px,92vw)}
+          .nav-dropdown:last-child .dropdown{right:0;left:auto}
+          .sale-bar{position:static;top:auto;margin-top:0}
+        }
+        @media (max-width:480px){
+          .nav .container{padding-inline:8px}
+          .nav-inner{padding:8px 0 7px;gap:7px}
+          .nav .brand{font-size:.95rem}
+          .nav .brand-mark{width:24px;height:24px}
+          .nav-actions{gap:6px;row-gap:6px}
+          .nav-btn{height:32px;min-height:32px;padding:0 8px;font-size:.72rem}
+        }
       `}</style>
 
 
@@ -1912,16 +1933,15 @@ export default function BeatStore() {
               <p style={{color: 'var(--text)'}}>You get a beat tailored to your exact vision, and it's yours alone. Once you purchase it, it's retired from our catalog forever.</p>
               <p style={{color: 'var(--text)'}}>This beat will never be licensed to any other party.</p>
               <ul className="checklist" style={{ color: 'var(--muted)' }}>
-                <li>Exclusive use of the beat</li>
-                <li>Unlimited Use & Modifications</li>
-                <li>Unlimited streams</li>
-                <li>Unlimited radio stations</li>
-                <li>WAV File & Track Stems</li>
-                <li>.FLP project file and Zipped Loop Package</li>
-                <li>Keep 100% of your new song's sync royalties</li>
-                <li>Get your song featured on our website</li>
+                <li>Exclusive rights to the beat</li>
+                <li>Unlimited use & modifications</li>
+                <li>Unlimited streams & radio play</li>
+                <li>WAV file + track stems</li>
+                <li>Full .FLP project file + zipped loop package</li>
+                <li>Keep 100% of your masters & sync royalties</li>
+                <li>Feature placement on the Honeycomb Lab website</li>
                 <li>Credit optional</li>
-                <li>50/50 Songwriting Split</li>
+                <li>50/50 songwriting split</li>
               </ul>
               <div className="price-label" style={{ fontSize: '36px', fontWeight: 'bold', marginTop: '16px' }}>
                 <span style={{textDecoration:'line-through', color:'var(--muted)', fontWeight:700, marginRight:8}}>$701</span>
